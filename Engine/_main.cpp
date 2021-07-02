@@ -1,6 +1,12 @@
 #include <iostream>
+#include <Application/RedteaApp.h>
 
-void main()
+
+using namespace redtea;
+int main(int argc, char *argv[])
 {
-    std::cout << "hello world!" << std::endl;
+	RedteaApp& app = RedteaApp::GetInstance();
+	app.Initialize();
+	app.Run();
+	return 0;
 }
