@@ -1,0 +1,1 @@
+add_subdirectory(libsdl2 EXCLUDE_FROM_ALL)
