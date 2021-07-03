@@ -2,11 +2,13 @@ set(TARGET Common)
 
 set(HEADER_FILES
     common.h
+    object.h
     logger/logger.h
     logger/ostream.h
 )
 
 set(SOURCE_FILES
+    object.cpp
     logger/logger.cpp
     logger/ostream.cpp
 )
