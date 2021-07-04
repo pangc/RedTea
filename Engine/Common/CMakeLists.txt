@@ -13,6 +13,4 @@ set(SOURCE_FILES
     logger/ostream.cpp
 )
 
-
 add_library(${TARGET} STATIC ${HEADER_FILES}  ${SOURCE_FILES})
-target_link_libraries(${TARGET} PUBLIC ${RUNTIME_LIBS})

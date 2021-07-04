@@ -1,5 +1,4 @@
 #include "RedteaApp.h"
-#include <SDL.h>
 #include <logger/logger.h>
 
 using namespace redtea;
@@ -17,24 +16,19 @@ RedteaApp::RedteaApp()
 
 void RedteaApp::Initialize()
 {
+	mWindow = new device::RedteaWindow(1080, 750, "Red Tea Engine");
 	LOGD("Initialize");
 }
 
 
 void RedteaApp::Destroy()
 {
-
+	mWindow->Destroy();
 }
 
 void RedteaApp::Run()
 {
-
-}
-
-void RedteaApp::InitSDL()
-{
-	if (SDL_Init(SDL_INIT_EVENTS) == 0)
+	while (true)
 	{
-		// 
 	}
 }

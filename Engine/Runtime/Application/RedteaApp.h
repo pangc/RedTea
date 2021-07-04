@@ -1,5 +1,5 @@
 #pragma once
-
+#include "../Device/Window.h"
 namespace redtea {
     class RedteaApp
     {
@@ -14,9 +14,8 @@ namespace redtea {
         RedteaApp(RedteaApp&& rhs) = delete;
         RedteaApp& operator=(const RedteaApp& rhs) = delete;
         RedteaApp& operator=(RedteaApp&& rhs) = delete;
-    
+		device::RedteaWindow *mWindow;
     private:
-		void InitSDL();
         bool m_destroyed = false;
     };
 }

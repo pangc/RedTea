@@ -7,13 +7,14 @@ SOURCE_GROUP(Application FILES ${APPLICATION_FILES})
 
 set(RUNTIME_LIBS
     Common
-    SDL2-static
-    SDL2main
+    Device
 )
 
 set(INCLUDE_PATH
     ../Common/
 )
+
+add_subdirectory(Device)
 
 add_library(${TARGET} STATIC ${APPLICATION_FILES})
 target_link_libraries(${TARGET} PRIVATE ${RUNTIME_LIBS})

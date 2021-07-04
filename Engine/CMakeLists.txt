@@ -4,8 +4,8 @@ project(Client)
 set(HEADER_FILES
 )
 
-add_subdirectory(Runtime)
 add_subdirectory(Common)
+add_subdirectory(Runtime)
 
 set(SOURCE_FILES
     _main.cpp
