@@ -22,8 +22,8 @@ namespace device
 		void PollEvents();
 		float GetDeltaTime();
 		inline void RegistEventCallback(EventCallback callback) { mCallback = callback; }
-	private:
 		void Resize();
+	private:
 		std::string mTitle;
 		size_t mWidth;
 		size_t mHeight;

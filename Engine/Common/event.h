@@ -13,7 +13,8 @@ namespace common
 		MOUSE_UP,
 		MOUSE_DOWN,
 		MOUSE_WHEEEL,
-		MOUSE_MOTION
+		MOUSE_MOTION,
+		WINDOWS_RESIZE
 	};
 
 	enum ButtonType

@@ -32,7 +32,9 @@ void RedteaApp::Initialize()
 			break;
 		case common::EventType::MOUSE_UP:
 		case common::EventType::MOUSE_DOWN:
-			common::rlog.d << "mouse is:" << data.button.x << data.button.y << data.button.type << redtea::common::endl;
+			break;
+		case common::EventType::WINDOWS_RESIZE:
+			mWindow->Resize();
 			break;
 		}
 	};

@@ -107,10 +107,18 @@ namespace device
 					data.motion.x = event.button.x;
 					data.motion.y = event.button.y;
 					break;
+				case SDL_WINDOWEVENT:
+					if (event.window.event == SDL_WINDOWEVENT_RESIZED)
+					{
+						type = common::EventType::WINDOWS_RESIZE;
+					}
 				default:
 					break;
 				}
-				mCallback(type, data);
+				if (type != common::EventType::UNKNOW)
+				{
+					mCallback(type, data);
+				}
 			}
 		}
 	}
@@ -128,6 +136,26 @@ namespace device
 
 	void RedteaWindow::Resize()
 	{
+		float dpiScaleX = 1.0f;
+		float dpiScaleY = 1.0f;
+
+		// If the app is not headless, query the window for its physical & virtual sizes.
+		if (mWindow) {
+			uint32_t width, height;
+			SDL_GL_GetDrawableSize((SDL_Window*)mWindow, (int*)&width, (int*)&height);
+			mWidth = (size_t)width;
+			mHeight = (size_t)height;
+
+			int virtualWidth, virtualHeight;
+			SDL_GetWindowSize((SDL_Window*)mWindow, &virtualWidth, &virtualHeight);
+			dpiScaleX = (float)width / virtualWidth;
+			dpiScaleY = (float)height / virtualHeight;
+		}
+
+		const uint32_t width = mWidth;
+		const uint32_t height = mHeight;
+
+		const double ratio = double(height) / double(width);
 		SDL_SetWindowSize((SDL_Window*)mWindow, mWidth, mHeight);
 	}
 }
