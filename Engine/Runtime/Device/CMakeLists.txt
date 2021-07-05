@@ -11,6 +11,7 @@ set(SOURCE_FILES
 set(DEVICE_LIB
     SDL2-static
     SDL2main
+    Common
 )
 
 add_library(${TARGET} STATIC ${HEADER_FILES}  ${SOURCE_FILES})

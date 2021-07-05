@@ -16,6 +16,6 @@ namespace redtea {
         RedteaApp& operator=(RedteaApp&& rhs) = delete;
 		device::RedteaWindow *mWindow;
     private:
-        bool m_destroyed = false;
+        bool mDestroyed = false;
     };
 }

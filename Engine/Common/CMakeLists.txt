@@ -3,6 +3,7 @@ set(TARGET Common)
 set(HEADER_FILES
     common.h
     object.h
+    event.h
     logger/logger.h
     logger/ostream.h
 )
@@ -14,3 +15,4 @@ set(SOURCE_FILES
 )
 
 add_library(${TARGET} STATIC ${HEADER_FILES}  ${SOURCE_FILES})
+target_include_directories(${TARGET} PUBLIC .)
