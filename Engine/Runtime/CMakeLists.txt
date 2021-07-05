@@ -1,7 +1,7 @@
 set(TARGET Engine)
 set(APPLICATION_FILES
-    Application/RedteaApp.h
-    Application/RedteaApp.cpp
+    Application/redtea_app.h
+    Application/redtea_app.cpp
 )
 SOURCE_GROUP(Application FILES ${APPLICATION_FILES})
 

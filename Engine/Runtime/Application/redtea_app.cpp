@@ -1,4 +1,4 @@
-#include "RedteaApp.h"
+#include "redtea_app.h"
 #include <logger/logger.h>
 #include <chrono>
 #include <thread>
@@ -50,7 +50,7 @@ void RedteaApp::Destroy()
 
 void RedteaApp::Run()
 {
-	// ÏÞÖÆ60fps
+	// ï¿½ï¿½ï¿½ï¿½60fps
 	const float fps = 1000.0 / 60;
 	while (!mDestroyed)
 	{

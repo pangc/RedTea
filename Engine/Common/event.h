@@ -150,7 +150,7 @@ namespace common
 		ButtonType type;
 	};
 
-	typedef union EventData
+	union EventData
 	{
 		int wheel;
 		KeyType key;

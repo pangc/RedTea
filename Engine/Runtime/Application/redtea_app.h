@@ -1,5 +1,5 @@
 #pragma once
-#include "../Device/Window.h"
+#include "../Device/window.h"
 namespace redtea {
     class RedteaApp
     {

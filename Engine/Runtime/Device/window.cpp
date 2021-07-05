@@ -1,4 +1,4 @@
-#include "Window.h"
+#include "window.h"
 #include<SDL.h>
 namespace redtea
 {
@@ -16,7 +16,7 @@ namespace device
 		const int x = SDL_WINDOWPOS_CENTERED;
 		const int y = SDL_WINDOWPOS_CENTERED;
 		uint32_t windowFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI;
-		// 支持窗口Size变化
+		
 		windowFlags |= SDL_WINDOW_RESIZABLE;
 
 		mWindow = SDL_CreateWindow(title.c_str(), x, y, (int)width, (int)height, windowFlags);
@@ -49,7 +49,6 @@ namespace device
 
 	void RedteaWindow::PollEvents()
 	{
-		// 限制一帧里监听的事件数量
 		constexpr size_t MaxEvent = 16;
 		SDL_Event events[MaxEvent];
 		int nevents = 0;
@@ -61,7 +60,6 @@ namespace device
 			for (int i = 0; i < nevents; i++)
 			{
 				const SDL_Event& event = events[i];
-				// 分发事件
 				common::EventData data;
 				data.wheel = 0;
 				common::EventType type = common::EventType::UNKNOW;
@@ -74,7 +72,6 @@ namespace device
 					type = common::EventType::KEY_DOWN;
 					if (event.key.keysym.scancode < common::KeyType::SCANCODE_COUNT)
 					{
-						// SCANE CODE 对齐
 						data.key = (common::KeyType)event.key.keysym.scancode;
 					}
 					break;
@@ -82,7 +79,6 @@ namespace device
 					type = common::EventType::KEY_UP;
 					if (event.key.keysym.scancode < common::KeyType::SCANCODE_COUNT)
 					{
-						// SCANE CODE 对齐
 						data.key = (common::KeyType)event.key.keysym.scancode;
 					}
 					break;
@@ -125,7 +121,6 @@ namespace device
 
 	float RedteaWindow::GetDeltaTime()
 	{
-		// 计算Time Step
 		static uint64_t frequency = SDL_GetPerformanceFrequency();
 		uint64_t now = SDL_GetPerformanceCounter();
 		const float timeStep = mTime > 0 ? (float)((double)(now - mTime) * 1000 / frequency) :

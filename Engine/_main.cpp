@@ -1,5 +1,5 @@
 #include <iostream>
-#include <Application/RedteaApp.h>
+#include <Application/redtea_app.h>
 
 
 using namespace redtea;
