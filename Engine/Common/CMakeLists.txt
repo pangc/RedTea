@@ -1,11 +1,16 @@
 set(TARGET Common)
 
+
 set(HEADER_FILES
     common.h
+    compiler_option.h
     object.h
     event.h
     logger/logger.h
     logger/ostream.h
+    utils/struct_of_arrays.h
+    utils/memory.h
+    utils/memory.cpp
 )
 
 set(SOURCE_FILES
