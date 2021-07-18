@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "common.h"
-
+#include "memory.h"
 #include "compiler_option.h"
 namespace redtea
 {
@@ -553,5 +553,8 @@ inline
 	return *this;
 }
 
-	}
+template<typename ... Elements>
+using StructureOfArrays = StructureOfArraysBase < AllocatorBase, Elements...>;
+
+}
 }

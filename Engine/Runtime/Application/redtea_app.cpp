@@ -50,7 +50,7 @@ void RedteaApp::Destroy()
 
 void RedteaApp::Run()
 {
-	// ����60fps
+	// 60fps
 	const float fps = 1000.0 / 60;
 	while (!mDestroyed)
 	{
