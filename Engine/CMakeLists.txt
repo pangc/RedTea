@@ -5,6 +5,7 @@ set(HEADER_FILES
 )
 
 add_subdirectory(Common)
+add_subdirectory(Core)
 add_subdirectory(Runtime)
 
 set(SOURCE_FILES
