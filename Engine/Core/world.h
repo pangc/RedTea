@@ -14,6 +14,8 @@ namespace core {
 		Section(uint32_t id, World* world);
 		Entity CreateEntity();
 		void Destroy();
+		void SetActive();
+		inline uint32_t GetId() { return mId; }
 	private:
 		friend class World;
 		std::vector<Entity> mEntities;
@@ -29,10 +31,14 @@ namespace core {
 		~World();
 		Section* CreateSection();
 		inline EntityManager* GetEntityManager() { return mEntityManger; }
+		Section* GetActiveSection();
+		Section* GetSectionById(uint32_t id);
+		void SetActiveSection(uint32_t id);
 	private:
-		std::vector<Section*> sections;
+		std::vector<Section*> mSections;
 		EntityManager* mEntityManger;
-		uint32_t sectionIndex;
+		uint32_t mSectionIndex;
+		uint32_t curActiveSection;
 	};
 }
 }

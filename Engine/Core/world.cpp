@@ -1,4 +1,5 @@
 #include "world.h"
+#include "common.h"
 
 namespace redtea {
 namespace core {
@@ -19,7 +20,14 @@ namespace core {
 
 	void Section::Destroy()
 	{
-		
+		// batch delete entity
+		int size = mEntities.size();
+		mWorld->GetEntityManager()->DestroyEntitys(size, mEntities.data());
+	}
+
+	void Section::SetActive()
+	{
+		mWorld->SetActiveSection(mId);
 	}
 
 	World::World()
@@ -29,7 +37,7 @@ namespace core {
 
 	World::~World()
 	{
-		for (auto section : sections)
+		for (auto section : mSections)
 		{
 			section->Destroy();
 			delete section;
@@ -40,9 +48,33 @@ namespace core {
 
 	Section* World::CreateSection()
 	{
-		Section* section = new Section(sectionIndex++, this);
-		sections.emplace_back(section);
+		Section* section = new Section(mSectionIndex++, this);
+		mSections.emplace_back(section);
 		return section;
+	}
+
+	Section* World::GetActiveSection()
+	{
+		Section* p = GetSectionById(curActiveSection);
+		assert(p);
+		return p;
+	}
+
+	Section* World::GetSectionById(uint32_t id)
+	{
+		for (auto const section : mSections)
+		{
+			if (section->mId == id)
+			{
+				return section;
+			}
+		}
+		return nullptr;
+	}
+
+	void World::SetActiveSection(uint32_t id)
+	{
+		curActiveSection = id;
 	}
 
 }

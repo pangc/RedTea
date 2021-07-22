@@ -53,5 +53,11 @@ void EntityManager::DestroyEntity(Entity e)
 	DestroyEntitys(1, &e);
 }
 
+
+EntityManager::~EntityManager()
+{
+
+}
+
 }
 }

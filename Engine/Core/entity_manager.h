@@ -14,7 +14,7 @@ public:
     void InitEntity(int n, Entity* e);
     void DestroyEntitys(int n, Entity* e);
 	void DestroyEntity(Entity e);
-    ~EntityManager();
+	~EntityManager();
     
 public:
     std::deque<Entity::Type> mFreeList;
