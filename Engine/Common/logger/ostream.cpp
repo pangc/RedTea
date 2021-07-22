@@ -81,6 +81,7 @@ const char* ostream::getFormat(ostream::type t) const noexcept {
         case type::ULONG_LONG:  return mShowHex ? "0x%llx" : "%llu";
         case type::DOUBLE:      return "%f";
         case type::LONG_DOUBLE: return "%Lf";
+		default: return "";
     }
 }
 
