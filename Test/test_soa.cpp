@@ -24,9 +24,6 @@ void Dump(struct Point& p)
 
 TEST(SOA_TEST, for_each)
 {
-	
-
-
 	using TestSOA = redtea::common::StructureOfArrays<std::string, Point>;
 
 	TestSOA soa;
