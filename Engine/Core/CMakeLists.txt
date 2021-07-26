@@ -3,6 +3,8 @@ set(TARGET Core)
 set(HEADER_FILES
     entity.h
     entity_manager.h
+	component_manager.h
+	component.h
     world.h
 )
 
