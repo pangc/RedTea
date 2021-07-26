@@ -84,6 +84,14 @@ public:
 		return data<ElementIndex>();
 	}
 
+	template<size_t E>
+	struct Field : public SoA::template Field<E, Instance> {
+		Field(ComponentManagerBase& soa, Instance i) noexcept
+			: SoA::template Field<E, Instance>{ soa.mData, i } {
+		}
+		using SoA::template Field<E, Instance>::operator =;
+	};
+
 protected:
 	// 从SOA里取出第N组数据
 	template<size_t ElementIndex>

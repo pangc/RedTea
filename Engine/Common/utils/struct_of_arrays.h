@@ -396,6 +396,63 @@ public:
 		return data<ElementIndex>()[size() - 1];
 	}
 
+	template <size_t E, typename Instance>
+	struct Field {
+		SoA& soa;
+		Instance i;
+		using Type = typename SoA::template TypeAt<E>;
+
+		inline Field& operator = (Field&& rhs) noexcept {
+			soa.elementAt<E>(i) = soa.elementAt<E>(rhs.i);
+			return *this;
+		}
+
+		// auto-conversion to the field's type
+		inline operator Type&() noexcept {
+			return soa.elementAt<E>(i);
+		}
+		inline operator Type const&() const noexcept {
+			return soa.elementAt<E>(i);
+		}
+		// dereferencing the selected field
+		inline Type& operator ->() noexcept {
+			return soa.elementAt<E>(i);
+		}
+		inline Type const& operator ->() const noexcept {
+			return soa.elementAt<E>(i);
+		}
+		// address-of the selected field
+		inline Type* operator &() noexcept {
+			return &soa.elementAt<E>(i);
+		}
+		inline Type const* operator &() const noexcept {
+			return &soa.elementAt<E>(i);
+		}
+		// assignment to the field
+		inline Type const& operator = (Type const& other) noexcept {
+			return (soa.elementAt<E>(i) = other);
+		}
+		inline Type const& operator = (Type&& other) noexcept {
+			return (soa.elementAt<E>(i) = other);
+		}
+		// comparisons
+		inline bool operator==(Type const& other) const {
+			return (soa.elementAt<E>(i) == other);
+		}
+		inline bool operator!=(Type const& other) const {
+			return (soa.elementAt<E>(i) != other);
+		}
+		// calling the field
+		template <typename ... ARGS>
+		inline decltype(auto) operator()(ARGS&& ... args) noexcept {
+			return soa.elementAt<E>(i)(std::forward<ARGS>(args)...);
+		}
+		template <typename ... ARGS>
+		inline decltype(auto) operator()(ARGS&& ... args) const noexcept {
+			return soa.elementAt<E>(i)(std::forward<ARGS>(args)...);
+		}
+	};
+
 private:
 
 	template<typename T>
