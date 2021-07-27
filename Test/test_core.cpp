@@ -33,30 +33,16 @@ TEST(CORE_TEST, component_manager)
 	class MoveManager : public ComponentManagerBase<Vector3, Vector3>
 	{
 	public:
-		using Instance = redtea::core::ComponentInstance::Type;
 		enum
 		{
 			Direction,
 			Position
 		};
 
-		struct Proxy
-		{
-			Proxy(MoveManager& sim, Instance i) noexcept
-				: directoin{ sim, i } { }
-			union {
-				Field<Direction>           directoin;
-				Field<Position>             positoin;
-			};
-		};
-
-		inline Proxy operator[](Instance i) noexcept {
-			return { *this, i };
-		}
-
-		inline const Proxy operator[](Instance i) const noexcept {
-			return { const_cast<MoveManager&>(*this), i };
-		}
+		PROXY_DEFINE(MoveManager)
+			DEFINE_FEILD(Direction, direction)
+			DEFINE_FEILD(Position, position)
+		PROXY_END()
 	};
 
 	World world;
@@ -64,11 +50,11 @@ TEST(CORE_TEST, component_manager)
 	auto section = world.CreateSection();
 	auto e = section->CreateEntity();
 	auto i = manager.AddComponent(e);
-	manager[i].directoin = { 1, 2, 3 };
-	manager[i].positoin = { 4, 5, 6 };
+	manager[i].direction = { 1, 2, 3 };
+	manager[i].position = { 4, 5, 6 };
 	EXPECT_EQ(manager.HasComponent(e), true);
 
-	Vector3& direction = manager[i].directoin;
+	Vector3& direction = manager[i].direction;
 	EXPECT_EQ(direction.x, 1);
 	EXPECT_EQ(direction.y, 2);
 	EXPECT_EQ(direction.z, 3);

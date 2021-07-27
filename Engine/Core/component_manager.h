@@ -11,11 +11,10 @@ template <typename ... Elements>
 class  ComponentManagerBase
 {
 protected:
-	static constexpr size_t ENTITY_INDEX = sizeof ... (Elements);
-private:
+	static constexpr size_t ENTITY_INDEX = sizeof ... (Elements);	
+protected:
 	using SoA = common::StructureOfArrays<Elements ..., Entity>;
 	using Instance = ComponentInstance::Type;
-protected:
 	SoA mData;
 	std::unordered_map<Entity, Instance> mInstanceMap;
 
@@ -61,46 +60,60 @@ public:
 		return GetComponentCount() == 0;
 	}
 
-	Entity GetEntity(Instance i) const noexcept {
+	Entity GetEntity(Instance i) const noexcept 
+	{
 		return GetElement<ENTITY_INDEX>(i);
 	}
 
 
 	// 根据Instance从SOA里获得第N个元素
 	template<size_t ElementIndex>
-	typename SoA::template TypeAt<ElementIndex>& GetElement(Instance index) noexcept {
+	typename SoA::template TypeAt<ElementIndex>& GetElement(Instance index) noexcept 
+	{
 		assert(index);
 		return data<ElementIndex>()[index];
 	}
 
 	template<size_t ElementIndex>
-	typename SoA::template TypeAt<ElementIndex> const& GetElement(Instance index) const noexcept {
+	typename SoA::template TypeAt<ElementIndex> const& GetElement(Instance index) const noexcept 
+	{
 		assert(index);
 		return data<ElementIndex>()[index];
 	}
 
 	template<size_t ElementIndex>
-	typename SoA::template TypeAt<ElementIndex> const* GetRawArray() const noexcept {
+	typename SoA::template TypeAt<ElementIndex> const* GetRawArray() const noexcept 
+	{
 		return data<ElementIndex>();
 	}
 
 	template<size_t E>
-	struct Field : public SoA::template Field<E, Instance> {
+	struct Field : public SoA::template Field<E, Instance> 
+	{
 		Field(ComponentManagerBase& soa, Instance i) noexcept
-			: SoA::template Field<E, Instance>{ soa.mData, i } {
-		}
+			: SoA::template Field<E, Instance>{ soa.mData, i } {}
 		using SoA::template Field<E, Instance>::operator =;
+	};
+
+	struct ProxyBase
+	{
+		ProxyBase(ComponentManagerBase& _soa, Instance _i)
+			: soa(_soa), i(_i) {}
+		ComponentManagerBase& soa;
+		Instance i;
 	};
 
 protected:
 	// 从SOA里取出第N组数据
 	template<size_t ElementIndex>
-	typename SoA::template TypeAt<ElementIndex>* data() noexcept {
+	typename SoA::template TypeAt<ElementIndex>* data() noexcept
+	{
 		return mData.template data<ElementIndex>();
 	}
 
 	template<size_t ElementIndex>
-	typename SoA::template TypeAt<ElementIndex> const* data() const noexcept {
+	typename SoA::template TypeAt<ElementIndex> const* data() const noexcept
+	{
 		return mData.template data<ElementIndex>();
 	}
 
@@ -108,7 +121,8 @@ protected:
 
 template<typename ... Elements>
 typename ComponentManagerBase<Elements ...>::Instance
-ComponentManagerBase<Elements ...>::AddComponent(Entity e) {
+ComponentManagerBase<Elements ...>::AddComponent(Entity e)
+{
 	Instance ci = 0;
 	if (!HasComponent(e)) {
 		// 创建一个索引
@@ -126,16 +140,19 @@ ComponentManagerBase<Elements ...>::AddComponent(Entity e) {
 
 template <typename ... Elements>
 typename ComponentManagerBase<Elements ...>::Instance
-ComponentManagerBase<Elements ... >::RemoveComponent(Entity e) {
+ComponentManagerBase<Elements ... >::RemoveComponent(Entity e)
+{
 	auto& map = mInstanceMap;
 	auto pos = map.find(e);
-	if (LIKELY(pos != map.end())) {
+	if (LIKELY(pos != map.end()))
+	{
 		size_t index = pos->second;
 		assert(index != 0);
 		size_t last = mData.size() - 1;
 		if (last != index) {
 			// 移动最后一个Entity填充被删除的数据
-			mData.forEach([index, last](auto* p) {
+			mData.forEach([index, last](auto* p)
+			{
 				p[index] = std::move(p[last]);
 			});
 
@@ -149,6 +166,23 @@ ComponentManagerBase<Elements ... >::RemoveComponent(Entity e) {
 	}
 	return 0;
 }
+
+#define PROXY_DEFINE(ClassName) \
+using ProxyInstance = redtea::core::ComponentInstance; \
+struct ClassName##Proxy;\
+inline ClassName##Proxy operator[](ProxyInstance i) noexcept { return { *this, i }; } \
+inline const ClassName##Proxy operator[](ProxyInstance i) const noexcept { return { const_cast<ClassName&>(*this), i }; } \
+struct ClassName##Proxy {	\
+ClassName##Proxy(ClassName& sim, ProxyInstance i) noexcept : base{ sim, i } { }; \
+union {
+
+#define PROXY_END() \
+ProxyBase base; \
+};};
+
+
+#define DEFINE_FEILD(Type, name) \
+Field<Type> name;
 
 }
 }
