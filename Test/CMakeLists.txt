@@ -4,6 +4,7 @@ set(TEST_FILES
     test.cpp
     test_soa.cpp
 	test_core.cpp
+    test_device.cpp
 )
 
 set(TEST_LIBS
