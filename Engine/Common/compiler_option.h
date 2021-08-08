@@ -44,3 +44,9 @@
 #else
 #    define RESTRICT
 #endif
+
+#if __has_attribute(nodiscard)
+#define NODISCARD [[nodiscard]]
+#else
+#define NODISCARD
+#endif
