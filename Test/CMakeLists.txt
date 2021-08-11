@@ -2,7 +2,7 @@ project(Test)
 
 set(TEST_FILES
     test.cpp
-    test_soa.cpp
+    test_common.cpp
 	test_core.cpp
     test_device.cpp
 )

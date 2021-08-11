@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include "utils/memory.h"
 #include "utils/struct_of_arrays.h"
+#include "utils/lockfree_queue.h"
 #include <string>
 
 struct Point {
@@ -58,4 +59,23 @@ TEST(SOA_TEST, for_each)
 		Dump(p.get<NAME>());
 		Dump(p.get<POSITION>());
 	}
+}
+
+TEST(LOCKFREEQUEUE_TEST, for_each)
+{
+	using namespace redtea::common;
+	LockFreeQueue<char*> queue(64);
+
+	char* msg = "Hello World;";
+	queue.push(msg);
+	char* result;
+	queue.pop(result);
+	std::cout << result << std::endl;
+
+	char* msg1 = "first message;";
+	queue.push(msg1);
+	char* msg2 = "second message;";
+	queue.push(msg2);
+	EXPECT_EQ(queue.size(), 2);
+	EXPECT_EQ(queue.capacity(), 64);
 }
