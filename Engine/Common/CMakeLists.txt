@@ -11,6 +11,7 @@ set(HEADER_FILES
     utils/struct_of_arrays.h
     utils/memory.h
     utils/memory.cpp
+	utils/lockfree_queue.h
 )
 
 set(SOURCE_FILES
