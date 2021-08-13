@@ -5,6 +5,24 @@ namespace device {
 
 class RingBuffer
 {
+
+struct Reader
+{
+	char* curPos;
+};
+
+struct Writer
+{
+	char* curPos;
+};
+	
+enum
+{
+	kDefaultAlignment = 16,
+	// page size 4096
+	kDefaultMemChunk = 4096
+};
+
 public:
 	explicit RingBuffer(size_t bufferSize);
 
@@ -23,6 +41,8 @@ public:
 	void* GetTail() const noexcept { return mTail; }
 
 private:
+	size_t Align(size_t pos, size_t alignment) const { return (pos + alignment - 1)&~(alignment - 1); }
+
 	// ringbuffer memory pointer
 	void* mData = nullptr;
 

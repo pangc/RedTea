@@ -11,6 +11,7 @@ set(SOURCE_FILES
 set(RHI_FILES
     RHI/resource.h
     RHI/ringbuffer.h
+	RHI/ringbuffer.cpp
 )
 
 SOURCE_GROUP(RHI FILES ${RHI_FILES})
