@@ -10,8 +10,8 @@ set(SOURCE_FILES
 
 set(RHI_FILES
     RHI/resource.h
-    RHI/ringbuffer.h
-	RHI/ringbuffer.cpp
+    RHI/command_buffer.h
+	RHI/command_buffer.cpp
 )
 
 SOURCE_GROUP(RHI FILES ${RHI_FILES})

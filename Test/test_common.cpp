@@ -78,4 +78,10 @@ TEST(LOCKFREEQUEUE_TEST, for_each)
 	queue.push(msg2);
 	EXPECT_EQ(queue.size(), 2);
 	EXPECT_EQ(queue.capacity(), 64);
+
+	//FIFO Test
+	queue.pop(result);
+	std::cout << result << std::endl;
+	queue.pop(result);
+	std::cout << result << std::endl; 
 }
