@@ -1,7 +1,7 @@
 #pragma once
 #include <functional>
 #include "utils/lockfree_queue.h"
-#include <iostream>
+#include <mutex>
 
 namespace redtea {
 namespace device {
@@ -92,6 +92,18 @@ public:
 	void ProcessOneCommand();
 	// Excute all command and clear buffer
 	void Flush();
+	void WaitAndFlush();
+
+	// call writer thread
+	bool WaitForCommand();
+	// call reader thread;
+	void KickOff();
+
+	// Finish
+	void RequestExit() {
+		mRequestExit = true;
+		mCondition.notify_all();
+	}
 private:
 	inline size_t Align(size_t pos, size_t alignment = kDefaultAlignment) const { return (pos + alignment - 1)&~(alignment - 1); }
 	
@@ -116,6 +128,12 @@ private:
 	static constexpr size_t noopCmdSize = sizeof(NoopCommand);
 	// Memory chunk list
 	common::LockFreeQueue<uint8_t*> mFreeChunk{ kDefaultChunkSize };
+
+	// Lock
+	mutable std::mutex mLock;
+	mutable std::condition_variable mCondition;
+
+	bool mRequestExit = false;
 };
 
 template<typename T, typename ...ARGS>

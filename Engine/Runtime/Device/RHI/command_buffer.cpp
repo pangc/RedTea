@@ -2,7 +2,6 @@
 #include "common.h"
 #include "utils/memory.h"
 #include <algorithm>
-#include <iostream>
 
 namespace redtea {
 namespace device {
@@ -104,6 +103,11 @@ uint8_t* CommandBuffer::AllocateChunk()
 	{
 		LOGE("CommandBuffer used chunk is full!");
 		ASSERT(false);
+		std::unique_lock<std::mutex> lock(mLock);
+		while (mUsedChunkNum.load() >= kDefaultChunkSize || mRequestExit)
+		{
+			mCondition.wait(lock);
+		}
 	}
 
 	uint8_t* ptr = nullptr;
@@ -128,6 +132,8 @@ void CommandBuffer::RecycleChunk(uint8_t * chunk)
 		mFreeChunk.push(chunk);
 	}
 	mUsedChunkNum.fetch_sub(1);
+	// notify writer
+	mCondition.notify_one();
 }
 
 void CommandBuffer::SwitchReadingChunk(uint8_t * chunk)
@@ -146,13 +152,6 @@ void CommandBuffer::SwitchWritingChunk(uint8_t * chunk)
 CommandBase * CommandBuffer::FetchCommand()
 {
 	CommandBase* command = nullptr;
-#ifdef USE_MULTTRHEAD
-	// check command can be fetch
-	if (mCommandNum.load() <= 0)
-	{
-		// wait for command
-	}
-#endif
 	command = (CommandBase*)(mReader.chunk + mReader.offset);
 	return command;
 }
@@ -166,10 +165,39 @@ void CommandBuffer::ProcessOneCommand()
 
 void CommandBuffer::Flush()
 {
-	while (mCommandNum.load() > 0)
+	while (mCommandNum.load() > 0 && (!mRequestExit))
 	{
 		ProcessOneCommand();
 	}
+}
+
+void CommandBuffer::WaitAndFlush()
+{
+#if USE_MULTTRHEAD
+	// check command can be fetch
+	while (WaitForCommand())
+	{
+		Flush();
+	}
+#else
+	Flush();
+#endif
+
+}
+
+bool CommandBuffer::WaitForCommand()
+{
+	std::unique_lock<std::mutex> lock(mLock);
+	while (mCommandNum.load() <= 0 && (!mRequestExit))
+	{
+		mCondition.wait(lock);
+	}
+	return mCommandNum.load() > 0;
+}
+
+void CommandBuffer::KickOff()
+{
+	mCondition.notify_one();
 }
 
 }

@@ -1,6 +1,10 @@
 #include "../Engine/Runtime/Device/RHI/resource.h"
 #include "../Engine/Runtime/Device/RHI/command_buffer.h"
+#include "common.h"
 #include <gtest/gtest.h>
+#include <thread>
+#include <chrono>
+
 
 TEST(RESOURCE_TEST, resource)
 {
@@ -34,6 +38,44 @@ TEST(RESOURCE_TEST, resource)
 	std::cout << "have release" << std::endl;
 }
 
+#if USE_MULTTRHEAD
+TEST(RHI_TEST, writebuffer_multitread)
+{
+	using namespace redtea::device;
+	CommandBuffer buffer(10);
+	static int count = 0;
+	std::thread writer([&]()
+	{
+		for (int i = 0; i < 10000; i++)
+		{
+			buffer.WriteCommand<CustomCommand>([i]()
+			{
+				//std::cout << "reading " << i << " command" << std::endl;
+				count++;
+			});
+
+			//std::cout << "writing " << i << " command" << std::endl;
+			if (i % 100 == 0)
+			{
+				buffer.KickOff();
+			}
+		}
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+		buffer.RequestExit();
+	});
+
+	std::thread reader([&]()
+	{
+		buffer.WaitAndFlush();
+	});
+
+	writer.join();
+	reader.join();
+	
+	EXPECT_EQ(count, 10000);
+}
+#else
 TEST(RHI_TEST, writebuffer_singletread)
 {
 	using namespace redtea::device;
@@ -46,6 +88,7 @@ TEST(RHI_TEST, writebuffer_singletread)
 			count++;
 		});
 	}
- 	buffer.Flush();
+	buffer.Flush();
 	EXPECT_EQ(count, 10000);
 }
+#endif

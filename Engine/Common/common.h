@@ -6,4 +6,4 @@
 
 #define ASSERT assert
 
-#define USE_MULTTRHEAD 0
+#define USE_MULTTRHEAD 1
