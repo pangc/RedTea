@@ -101,13 +101,16 @@ uint8_t* CommandBuffer::AllocateChunk()
 	// Check used chunk is not full
 	if (UNLIKELY(mUsedChunkNum.load() >= kDefaultChunkSize))
 	{
-		LOGE("CommandBuffer used chunk is full!");
-		ASSERT(false);
+#if USE_MULTTRHEAD
 		std::unique_lock<std::mutex> lock(mLock);
 		while (mUsedChunkNum.load() >= kDefaultChunkSize || mRequestExit)
 		{
 			mCondition.wait(lock);
 		}
+#else
+		LOGE("CommandBuffer used chunk is full!");
+		ASSERT(false);
+#endif
 	}
 
 	uint8_t* ptr = nullptr;
