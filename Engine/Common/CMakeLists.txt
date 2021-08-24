@@ -1,5 +1,6 @@
 set(TARGET Common)
 
+add_subdirectory(ispc)
 
 set(HEADER_FILES
     common.h
