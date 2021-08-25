@@ -1,6 +1,7 @@
 set(TARGET Common)
 
 add_subdirectory(ispc)
+add_subdirectory(math)
 
 set(HEADER_FILES
     common.h
