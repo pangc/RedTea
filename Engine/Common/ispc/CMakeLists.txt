@@ -3,12 +3,12 @@ project(${PROJECT_NAME} C CXX)
 
 #设置ISPC文件
 set (ISPC_SRC_NAME
-    simple
+    vector
 )
 
 #设置cpp文件
 set(SOURCE_FILES
-    simple.cpp
+	vector_ispc.cpp
 )
 
 set(HEADER_FILES
