@@ -5,12 +5,14 @@ set(TEST_FILES
     test_common.cpp
 	test_core.cpp
     test_device.cpp
+    test_math.cpp
 )
 
 set(TEST_LIBS
     Common
     Device
 	Core
+	Math
 )
 
 add_executable(Test ${TEST_FILES})
