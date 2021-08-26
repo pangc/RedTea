@@ -7,6 +7,7 @@ set(HEADER_FILES
 )
 
 set(SOURCE_FILES
+	math.cpp
 )
 
 add_library(${TARGET} STATIC ${HEADER_FILES}  ${SOURCE_FILES} ${RHI_FILES})
