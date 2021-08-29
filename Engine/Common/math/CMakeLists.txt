@@ -4,6 +4,8 @@ project(${TARGET})
 set(HEADER_FILES
 	vector.h
 	vector_helper.h
+	matrix.h
+	matrix_helper.h
 )
 
 set(SOURCE_FILES
