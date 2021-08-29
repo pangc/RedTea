@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "math/vector.h"
+#include "math/matrix.h"
 
 TEST(MATH_TEST, vector)
 {
@@ -29,4 +30,30 @@ TEST(MATH_TEST, vector)
 	Vector4f v7 = { 1, 1, 1, 4};
 	Vector4f v8 = { v6, 4 };
 	EXPECT_EQ(v7 == v8, true);
+}
+
+TEST(MATH_TEST, matrix)
+{
+	using namespace redtea::math;
+	Mat4i m1(
+		0, 1, 2, 3,
+		4, 5, 6, 7,
+		8, 9, 10, 11,
+		12, 13, 14, 15
+	);
+	
+	Mat4i m2 = transpose(m1);
+	bool success = true;
+	for (int i = 0; i < 4; i++)
+	{
+		success = success & m1[i][0] == m2[0][i];
+		success = success & m1[i][1] == m2[1][i];
+		success = success & m1[i][2] == m2[2][i];
+		success = success & m1[i][3] == m2[3][i];
+	}
+	EXPECT_EQ(success, true);
+
+	Mat4i identity;
+	Mat4i m3 = m1 * identity;
+	EXPECT_EQ(m1 == m3, true);
 }
