@@ -8,18 +8,20 @@ namespace math {
 
 template <typename T>
 class Matrix33 : public VecAddOperators<Matrix33, T>,
-	VecComparisonOperators<Matrix33, T>,
-	MatProductOperators<Matrix33, T, Vector3>, 
-	MatSquareFunctions<Matrix33, T>,
-	MatHelpers<Matrix33, T>
+	public VecComparisonOperators<Matrix33, T>,
+	public MatProductOperators<Matrix33, T, Vector3>,
+	public MatSquareFunctions<Matrix33, T>,
+	public MatHelpers<Matrix33, T>
 {
+public:
 	typedef Vector3<T> col_type;
 	typedef Vector3<T> row_type;
 	static constexpr size_t COL_SIZE = col_type::SIZE;  // size of a column (i.e.: number of rows)
 	static constexpr size_t ROW_SIZE = row_type::SIZE;  // size of a row (i.e.: number of columns)
 	static constexpr size_t NUM_ROWS = COL_SIZE;
 	static constexpr size_t NUM_COLS = ROW_SIZE;
-public:
+	inline constexpr size_t size() const { return NUM_COLS; }
+
 	col_type data[COL_SIZE];
 
 	constexpr Matrix33() noexcept;
@@ -159,10 +161,10 @@ constexpr Matrix33<T>::Matrix33(const Vector3<A>& v0, const Vector3<B>& v1, cons
 
 template <typename T>
 class Matrix44 : public VecAddOperators<Matrix44, T>,
-	VecComparisonOperators<Matrix44, T>,
-	MatProductOperators<Matrix44, T, Vector4>,
-	MatSquareFunctions<Matrix44, T>,
-	MatHelpers<Matrix44, T>
+	public VecComparisonOperators<Matrix44, T>,
+	public MatProductOperators<Matrix44, T, Vector4>,
+	public MatSquareFunctions<Matrix44, T>,
+	public MatHelpers<Matrix44, T>
 {
 public:
 	typedef Vector4<T> col_type;
@@ -171,6 +173,7 @@ public:
 	static constexpr size_t ROW_SIZE = row_type::SIZE;  // size of a row (i.e.: number of columns)
 	static constexpr size_t NUM_ROWS = COL_SIZE;
 	static constexpr size_t NUM_COLS = ROW_SIZE;
+	inline constexpr size_t size() const { return NUM_COLS; }
 
 	col_type data[COL_SIZE];
 

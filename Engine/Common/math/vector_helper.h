@@ -102,6 +102,99 @@ public:
 };
 
 template<template<typename T> class VECTOR, typename T>
+class VecProductOperators
+{
+public:
+	/* compound assignment from a another vector of the same size but different
+	 * element type.
+	 */
+	template<typename U>
+	constexpr VECTOR<T>& operator*=(const VECTOR<U>& v)
+	{
+		VECTOR<T>& lhs = static_cast<VECTOR<T>&>(*this);
+		for (size_t i = 0; i < lhs.size(); i++) {
+			lhs[i] *= v[i];
+		}
+		return lhs;
+	}
+
+	template<typename U, typename = enable_if_arithmetic_t<U>>
+	constexpr VECTOR<T>& operator*=(U v)
+	{
+		return operator*=(VECTOR<U>(v));
+	}
+
+	template<typename U>
+	constexpr VECTOR<T>& operator/=(const VECTOR<U>& v)
+	{
+		VECTOR<T>& lhs = static_cast<VECTOR<T>&>(*this);
+		for (size_t i = 0; i < lhs.size(); i++) {
+			lhs[i] /= v[i];
+		}
+		return lhs;
+	}
+
+	template<typename U, typename = enable_if_arithmetic_t<U>>
+	constexpr VECTOR<T>& operator/=(U v) {
+		return operator/=(VECTOR<U>(v));
+	}
+
+private:
+	/*
+	 * NOTE: the functions below ARE NOT member methods. They are friend functions
+	 * with they definition inlined with their declaration. This makes these
+	 * template functions available to the compiler when (and only when) this class
+	 * is instantiated, at which point they're only templated on the 2nd parameter
+	 * (the first one, BASE<T> being known).
+	 */
+
+	template<typename U>
+	friend inline constexpr
+		VECTOR<arithmetic_result_t<T, U>> operator*(const VECTOR<T>& lv, const VECTOR<U>& rv) {
+		VECTOR<arithmetic_result_t<T, U>> res(lv);
+		res *= rv;
+		return res;
+	}
+
+	template<typename U, typename = enable_if_arithmetic_t<U>>
+	friend inline constexpr
+		VECTOR<arithmetic_result_t<T, U>> operator*(const VECTOR<T>& lv, U rv)
+	{
+		return lv * VECTOR<U>(rv);
+	}
+
+	template<typename U, typename = enable_if_arithmetic_t<U>>
+	friend inline constexpr
+		VECTOR<arithmetic_result_t<T, U>> operator*(U lv, const VECTOR<T>& rv)
+	{
+		return VECTOR<U>(lv) * rv;
+	}
+
+	template<typename U>
+	friend inline constexpr
+		VECTOR<arithmetic_result_t<T, U>> operator/(const VECTOR<T>& lv, const VECTOR<U>& rv)
+	{
+		VECTOR<arithmetic_result_t<T, U>> res(lv);
+		res /= rv;
+		return res;
+	}
+
+	template<typename U, typename = enable_if_arithmetic_t<U>>
+	friend inline constexpr
+		VECTOR<arithmetic_result_t<T, U>> operator/(const VECTOR<T>& lv, U rv)
+	{
+		return lv / VECTOR<U>(rv);
+	}
+
+	template<typename U, typename = enable_if_arithmetic_t<U>>
+	friend inline constexpr
+		VECTOR<arithmetic_result_t<T, U>> operator/(U lv, const VECTOR<T>& rv)
+	{
+		return VECTOR<U>(lv) / rv;
+	}
+};
+
+template<template<typename T> class VECTOR, typename T>
 class VecComparisonOperators
 {
 public:

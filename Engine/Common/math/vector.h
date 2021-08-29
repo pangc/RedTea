@@ -6,10 +6,13 @@ namespace redtea {
 namespace math {
 
 template <typename T>
-class Vector2 : public VecAddOperators<Vector2, T>, VecComparisonOperators<Vector2, T>, VecFunctions<Vector2, T>
+class Vector2 : public VecAddOperators<Vector2, T>,
+	public VecComparisonOperators<Vector2, T>,
+	public VecFunctions<Vector2, T>,
+	public VecProductOperators<Vector2, T>
 {
-	static constexpr size_t SIZE = 2;
 public:
+	static constexpr size_t SIZE = 2;
 	union
 	{
 		T data[SIZE];
@@ -62,7 +65,10 @@ public:
 };
 
 template <typename T>
-class Vector3 : public VecAddOperators<Vector3, T>, VecComparisonOperators<Vector3, T>, VecFunctions<Vector3, T>
+class Vector3 : public VecAddOperators<Vector3, T>,
+	public VecComparisonOperators<Vector3, T>,
+	public VecFunctions<Vector3, T>,
+	public VecProductOperators<Vector3, T>
 {
 public:
 	static constexpr size_t SIZE = 3;
@@ -143,7 +149,10 @@ public:
 };
 
 template <typename T>
-class Vector4 : public VecAddOperators<Vector4, T>, VecComparisonOperators<Vector4, T>, VecFunctions<Vector4, T>
+class Vector4 : public VecAddOperators<Vector4, T>,
+	public VecComparisonOperators<Vector4, T>,
+	public VecFunctions<Vector4, T>,
+	public VecProductOperators<Vector4, T>
 {
 public:
 	static constexpr size_t SIZE = 4;
