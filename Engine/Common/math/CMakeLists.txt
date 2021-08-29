@@ -6,6 +6,8 @@ set(HEADER_FILES
 	vector_helper.h
 	matrix.h
 	matrix_helper.h
+	quaternion.h
+	quaternion_helper.h
 )
 
 set(SOURCE_FILES
