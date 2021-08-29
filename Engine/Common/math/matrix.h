@@ -24,6 +24,19 @@ public:
 
 	constexpr Matrix33() noexcept;
 
+	Matrix33(std::initializer_list<const T> list)
+	{
+		ASSERT(list.size() <= NUM_ROWS * NUM_COLS);
+		size_t i = 0;
+		size_t c = 0;
+		size_t r = 0;
+		for (auto val : list)
+		{
+			i++;
+			data[i/ NUM_COLS][i % NUM_ROWS] = val;
+		}
+	}
+
 	template<typename U>
 	constexpr explicit Matrix33(U v) noexcept;
 
@@ -66,13 +79,13 @@ public:
 
 	inline constexpr Vector3<T> const& operator[](size_t column) const noexcept
 	{
-		assert(column < NUM_COLS);
+		ASSERT(column < NUM_COLS);
 		return data[column];
 	}
 
 	inline constexpr col_type& operator[](size_t column) noexcept
 	{
-		assert(column < NUM_COLS);
+		ASSERT(column < NUM_COLS);
 		return data[column];
 	}
 };
@@ -151,16 +164,30 @@ class Matrix44 : public VecAddOperators<Matrix44, T>,
 	MatSquareFunctions<Matrix44, T>,
 	MatHelpers<Matrix44, T>
 {
+public:
 	typedef Vector4<T> col_type;
 	typedef Vector4<T> row_type;
 	static constexpr size_t COL_SIZE = col_type::SIZE;  // size of a column (i.e.: number of rows)
 	static constexpr size_t ROW_SIZE = row_type::SIZE;  // size of a row (i.e.: number of columns)
 	static constexpr size_t NUM_ROWS = COL_SIZE;
 	static constexpr size_t NUM_COLS = ROW_SIZE;
-public:
+
 	col_type data[COL_SIZE];
 
 	constexpr Matrix44() noexcept;
+
+	Matrix44(std::initializer_list<const T> list)
+	{
+		ASSERT(list.size() <= NUM_ROWS * NUM_COLS);
+		size_t i = 0;
+		size_t c = 0;
+		size_t r = 0;
+		for (auto val : list)
+		{
+			i++;
+			data[i / NUM_COLS][i % NUM_ROWS] = val;
+		}
+	}
 
 	template<typename U>
 	constexpr explicit Matrix44(U v) noexcept;
@@ -226,13 +253,13 @@ public:
 
 	inline constexpr Vector4<T> const& operator[](size_t column) const noexcept
 	{
-		assert(column < NUM_COLS);
+		ASSERT(column < NUM_COLS);
 		return data[column];
 	}
 
 	inline constexpr col_type& operator[](size_t column) noexcept
 	{
-		assert(column < NUM_COLS);
+		ASSERT(column < NUM_COLS);
 		return data[column];
 	}
 };
@@ -334,6 +361,10 @@ constexpr Matrix44<T>::Matrix44(const Matrix33<U>& m, const Vector4<V>& v) noexc
 {
 }
 
+using Mat3f = Matrix33<float>;
+using Mat3i = Matrix33<int>;
 
+using Mat4f = Matrix44<float>;
+using Mat4i = Matrix44<int>;
 }
 }

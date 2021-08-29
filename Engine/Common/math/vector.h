@@ -24,7 +24,7 @@ public:
 	Vector2(std::initializer_list<const T> list)
 	{
 		size_t i = 0;
-		assert(list.size() <= SIZE);
+		ASSERT(list.size() <= SIZE);
 		for (auto val : list)
 		{
 			data[i++] = val;
@@ -33,13 +33,13 @@ public:
 	// array access
 	inline constexpr T const& operator[](size_t i) const noexcept
 	{
-		assert(i < SIZE);
+		ASSERT(i < SIZE);
 		return data[i];
 	}
 
 	inline constexpr T& operator[](size_t i) noexcept
 	{
-		assert(i < SIZE);
+		ASSERT(i < SIZE);
 		return data[i];
 	}
 
@@ -95,7 +95,7 @@ public:
 	Vector3(std::initializer_list<const T> list)
 	{
 		size_t i = 0;
-		assert(list.size() <= SIZE);
+		ASSERT(list.size() <= SIZE);
 		for (auto val : list)
 		{
 			data[i++] = val;
@@ -105,13 +105,13 @@ public:
 	// array access
 	inline constexpr T const& operator[](size_t i) const noexcept
 	{
-		assert(i < SIZE);
+		ASSERT(i < SIZE);
 		return data[i];
 	}
 
 	inline constexpr T& operator[](size_t i) noexcept
 	{
-		assert(i < SIZE);
+		ASSERT(i < SIZE);
 		return data[i];
 	}
 
@@ -179,7 +179,7 @@ public:
 	Vector4(std::initializer_list<const T> list)
 	{
 		size_t i = 0;
-		assert(list.size() <= SIZE);
+		ASSERT(list.size() <= SIZE);
 		for (auto val : list)
 		{
 			data[i++] = val;
@@ -189,13 +189,13 @@ public:
 	// array access
 	inline constexpr T const& operator[](size_t i) const noexcept
 	{
-		assert(i < SIZE);
+		ASSERT(i < SIZE);
 		return data[i];
 	}
 
 	inline constexpr T& operator[](size_t i) noexcept
 	{
-		assert(i < SIZE);
+		ASSERT(i < SIZE);
 		return data[i];
 	}
 
