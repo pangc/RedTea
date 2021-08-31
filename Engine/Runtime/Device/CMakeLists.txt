@@ -1,6 +1,9 @@
 set(TARGET Device)
 
 set(HEADER_FILES
+    iresource.h
+    idevice.h
+    iswapchain.h
     window.h
 )
 
@@ -9,7 +12,6 @@ set(SOURCE_FILES
 )
 
 set(RHI_FILES
-    RHI/resource.h
     RHI/command_buffer.h
 	RHI/command_buffer.cpp
 )
