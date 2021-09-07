@@ -13,12 +13,44 @@ namespace device
 		virtual void Resize(uint16_t width, uint16_t height) = 0;
 	};
 
-	enum BufferType
+	enum class HeapType : uint8_t
+	{
+		DeviceLocal,
+		Upload,
+		Readback
+	};
+
+	struct HeapDesc
+	{
+		std::string name;
+		HeapType type;
+	};
+
+	class IHeap : public IResource
+	{
+	};
+
+	enum BufferType : uint8_t
 	{
 		VertexBuffer,
 		IndexBuffer
 	};
 
+	struct BufferDesc
+	{
+		BufferType type;
+		uint32_t size;
+	};
+
+	class IBuffer : public IResource
+	{
+	public:
+		BufferDesc desc;
+
+	};
+//******************************************************
+//**		Vertex									  **
+//******************************************************
 	struct VertexAttributeDesc
 	{
 		std::string name;
@@ -28,20 +60,10 @@ namespace device
 		uint8_t stride = 0;
 	};
 
-	struct IBufferDesc
-	{
-
-	};
-
-	class IVertexInputLayout : public IResource
+	class IInputLayout : public IResource
 	{
 	public:
 		std::vector<VertexAttributeDesc> attribtues;
-
-	};
-
-	class IBuffer : public IResource
-	{
 
 	};
 
@@ -50,9 +72,39 @@ namespace device
 
 	};
 
+	class IIndexBuffer : public IBuffer
+	{
 
+	};
+
+	struct TextureDesc
+	{
+	};
 
 	class ITexture : public IResource
+	{
+	};
+
+	struct SamplerDesc
+	{
+	};
+
+	class ISampler : public IResource
+	{
+
+	};
+
+	struct PipelineDesc
+	{
+	};
+
+	class IPipelineState : public IResource
+	{};
+
+	struct ComputePipelineDesc
+	{};
+
+	class IComputePipelineState : public IResource
 	{
 	};
 
