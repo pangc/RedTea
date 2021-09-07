@@ -1,4 +1,4 @@
-#include "../Engine/Runtime/Device/iresource.h"
+#include "../Engine/Runtime/Device/RHI/resource.h"
 #include "../Engine/Runtime/Device/RHI/command_buffer.h"
 #include "common.h"
 #include <gtest/gtest.h>
