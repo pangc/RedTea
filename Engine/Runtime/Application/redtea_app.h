@@ -14,8 +14,9 @@ namespace redtea {
         RedteaApp(RedteaApp&& rhs) = delete;
         RedteaApp& operator=(const RedteaApp& rhs) = delete;
         RedteaApp& operator=(RedteaApp&& rhs) = delete;
-		device::RedteaWindow *mWindow;
+		inline device::RedteaWindow* GetWindow() { return mWindow; }
     private:
+		device::RedteaWindow *mWindow;
         bool mDestroyed = false;
     };
 }
