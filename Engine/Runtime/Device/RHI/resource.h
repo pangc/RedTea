@@ -121,7 +121,7 @@ public:
 
     RefCountPtr& operator=(T *other) noexcept
     {
-        if (ptr_ != other)
+        if (mRefPtr != other)
         {
             RefCountPtr(other).Swap(*this);
         }
@@ -137,7 +137,7 @@ public:
 
     RefCountPtr& operator=(const RefCountPtr &other) noexcept
     {
-        if (ptr_ != other.mRefPtr)
+        if (mRefPtr != other.mRefPtr)
         {
             RefCountPtr(other).Swap(*this);
         }

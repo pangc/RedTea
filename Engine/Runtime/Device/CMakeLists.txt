@@ -16,6 +16,13 @@ set(RHI_FILES
 	RHI/device.h
 )
 
+if (USE_OPENGL)
+set(GLES_FILES 
+    Backend/opengl/gles_device.h
+    Backend/opengl/gles_device.cpp
+)
+list(APPEND RHI_FILES ${GLES_FILES})
+endif()
 SOURCE_GROUP(RHI FILES ${RHI_FILES})
 
 set(DEVICE_LIB
@@ -24,6 +31,24 @@ set(DEVICE_LIB
     Common
 )
 
-add_library(${TARGET} STATIC ${HEADER_FILES}  ${SOURCE_FILES} ${RHI_FILES})
-target_link_libraries(${TARGET} PRIVATE ${DEVICE_LIB})
+set(COMPILED_LIB)
+set(INCLUDE_PATH)
+set(DYNAMIC_LIB)
+
+if (USE_OPENGL)
+find_package(OpenGL REQUIRED)
+list(APPEND COMPILED_LIB ${OPENGL_LIBRARIES})
+if(NOT ${OpenGL_EGL_FOUND})
+	if(MSVC)
+		set(EGL_LIBRARY_PATH ${ROOT_PATH}/ThirdParty/egl)
+		list(APPEND COMPILED_LIB ${EGL_LIBRARY_PATH}/libEGL.lib)
+		list(APPEND INCLUDE_PATH ${EGL_LIBRARY_PATH}/include)
+	endif()
+endif()
+endif()
+
+add_library(${TARGET} STATIC ${DYNAMIC_LIB} ${HEADER_FILES}  ${SOURCE_FILES} ${RHI_FILES})
+target_link_libraries(${TARGET} PRIVATE ${DEVICE_LIB} ${COMPILED_LIB})
+target_include_directories(${TARGET}  PUBLIC ${INCLUDE_PATH})
 add_dependencies(${TARGET} ${DEVICE_LIB})
+

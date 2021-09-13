@@ -1,4 +1,7 @@
 set(TARGET Engine)
+
+add_subdirectory(Device)
+
 set(APPLICATION_FILES
     Application/redtea_app.h
     Application/redtea_app.cpp
@@ -14,7 +17,6 @@ set(INCLUDE_PATH
     ../Common/
 )
 
-add_subdirectory(Device)
 
 add_library(${TARGET} STATIC ${APPLICATION_FILES})
 target_link_libraries(${TARGET} PRIVATE ${RUNTIME_LIBS})

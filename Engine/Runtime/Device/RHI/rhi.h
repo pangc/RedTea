@@ -35,7 +35,7 @@ namespace device
 	private:
 		HeapDesc desc;
 	};
-	typedef RefCountPtr<IHeap> HeapHandler;
+	typedef RefCountPtr<IHeap> HeapHandle;
 
 	enum CpuAccessMode : uint8_t
 	{
@@ -159,7 +159,7 @@ namespace device
 	private:
 		BufferDesc desc;
 	};
-	typedef RefCountPtr<IBuffer> BufferHandler;
+	typedef RefCountPtr<IBuffer> BufferHandle;
 
 //**************************************************************
 //**				Vertex									  **
@@ -184,14 +184,14 @@ namespace device
 	public:
 		std::vector<VertexAttributeDesc> attribtues;
 	};
-	typedef RefCountPtr<IInputLayout> InputLayoutHandler;
+	typedef RefCountPtr<IInputLayout> InputLayoutHandle;
 
 	class IVertexBuffer : public IBuffer
 	{
 	public:
 		virtual ~IVertexBuffer() {}
 	};
-	typedef RefCountPtr<IVertexBuffer> VertexBufferHandler;
+	typedef RefCountPtr<IVertexBuffer> VertexBufferHandle;
 
 
 	class IIndexBuffer : public IBuffer
@@ -199,7 +199,7 @@ namespace device
 	public:
 		virtual ~IIndexBuffer() {}
 	};
-	typedef RefCountPtr<IIndexBuffer> IndexBufferHandler;
+	typedef RefCountPtr<IIndexBuffer> IndexBufferHandle;
 
 //**************************************************************
 //**				Texture									  **
@@ -253,7 +253,7 @@ namespace device
 	private:
 		TextureDesc  desc;
 	};
-	typedef RefCountPtr<ITexture> TextureHandler;
+	typedef RefCountPtr<ITexture> TextureHandle;
 
 	enum class SamplerAddressMode : uint8_t
 	{
@@ -292,7 +292,7 @@ namespace device
 	private:
 		SamplerDesc  desc;
 	};
-	typedef RefCountPtr<ISamplerState> SamplerStateHandler;
+	typedef RefCountPtr<ISamplerState> SamplerStateHandle;
 
 //**************************************************************
 //**				Shader									  **
@@ -302,7 +302,7 @@ namespace device
 	public:
 		virtual ~IUniformBuffer() {}
 	};
-	typedef RefCountPtr<IUniformBuffer> UniformBufferHandler;
+	typedef RefCountPtr<IUniformBuffer> UniformBufferHandle;
 
 	enum class ShaderType : uint16_t
 	{
@@ -528,10 +528,10 @@ namespace device
 	class IFrameBuffer : public IResource
 	{
 	public:
-		std::vector<TextureHandler> color;
-		TextureHandler depth;
+		std::vector<TextureHandle> color;
+		TextureHandle depth;
 	};
-	typedef RefCountPtr<IFrameBuffer> FrameBuffer;
+	typedef RefCountPtr<IFrameBuffer> FrameBufferHandle;
 
 	struct PipelineDesc
 	{
@@ -553,6 +553,7 @@ namespace device
 	private:
 		PipelineDesc desc;
 	};
+	typedef RefCountPtr<IPipelineState> PipelineStateHandle;
 
 	struct ComputePipelineDesc
 	{
@@ -567,5 +568,6 @@ namespace device
 	private:
 		ComputePipelineDesc desc;
 	};
+	typedef RefCountPtr<IComputePipelineState> ComputePipelineState;
 }
 }
