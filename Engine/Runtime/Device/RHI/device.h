@@ -9,7 +9,7 @@ namespace device
 	class IDevice
 	{
 	public:
-		virtual void InitDevice(void* windows) = 0;
+		virtual bool InitDevice(void* windows) = 0;
 		virtual SwapChainHandle CreateSwapchain() = 0;
 		virtual HeapHandle CreateHeap(const HeapDesc& d) = 0;
 		virtual TextureHandle CreateTexture(const TextureDesc& d) = 0;
