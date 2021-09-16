@@ -12,7 +12,8 @@ namespace device
 		virtual ~IDevice() {}
 		virtual bool InitDevice(void* windows) = 0;
 		virtual GraphicsAPI GetGraphicsAPI() = 0;
-		virtual SwapChainHandle CreateSwapchain() = 0;
+		virtual SwapChainHandle CreateSwapchain(const SwapChainDesc& d) = 0;
+		virtual void MakeCurrent(SwapChainHandle draw, SwapChainHandle read) = 0;
 		virtual HeapHandle CreateHeap(const HeapDesc& d) = 0;
 		virtual TextureHandle CreateTexture(const TextureDesc& d) = 0;
 		virtual SamplerStateHandle CreateSampler(const SamplerDesc& d) = 0;

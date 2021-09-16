@@ -13,7 +13,8 @@ namespace device
 		virtual ~GLSDevice();
 		virtual bool InitDevice(void* windows) override;
 		virtual GraphicsAPI GetGraphicsAPI() override { return GraphicsAPI::GLES3; }
-		virtual SwapChainHandle CreateSwapchain() override;
+		virtual SwapChainHandle CreateSwapchain(const SwapChainDesc& d) override;
+		virtual void MakeCurrent(SwapChainHandle draw, SwapChainHandle read) override;
 		virtual HeapHandle CreateHeap(const HeapDesc& d) override;
 		virtual TextureHandle CreateTexture(const TextureDesc& d) override;
 		virtual SamplerStateHandle CreateSampler(const SamplerDesc& d) override;

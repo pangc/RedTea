@@ -15,10 +15,25 @@ namespace device
 		DX12
 	};
 
+	struct SwapChainDesc
+	{
+		uint16_t width = 0;
+		uint16_t height = 0;
+		uint16_t msaa = 0;
+		bool	 isTransparent = false;
+		constexpr SwapChainDesc& SetWidth(uint16_t value) { width = value; return *this; }
+		constexpr SwapChainDesc& SetHeight(uint16_t value) { height = value; return *this; }
+		constexpr SwapChainDesc& SetMsaaSample(uint16_t value) { msaa = value; return *this; }
+		constexpr SwapChainDesc& SetTransparent(uint16_t value) { isTransparent = value; return *this; }
+	};
+
 	class ISwapChain : public RefCounter<IResource>
 	{
 	public:
+		SwapChainDesc& GetDescription() { return desc; };
 		virtual void Resize(uint16_t width, uint16_t height) = 0;
+	private:
+		SwapChainDesc desc;
 	};
 	typedef RefCountPtr<ISwapChain> SwapChainHandle;
 

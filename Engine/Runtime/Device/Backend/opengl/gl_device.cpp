@@ -24,9 +24,15 @@ namespace device
 		return true;
 	}
 
-	SwapChainHandle GLSDevice::CreateSwapchain()
+	SwapChainHandle GLSDevice::CreateSwapchain(const SwapChainDesc& d)
 	{
-		return SwapChainHandle();
+		SwapChainHandle handle = platform->CreateSwapChain(d);
+		return handle;
+	}
+
+	void GLSDevice::MakeCurrent(SwapChainHandle draw, SwapChainHandle read)
+	{
+		platform->MakeCurrent(draw, read);
 	}
 
 	HeapHandle GLSDevice::CreateHeap(const HeapDesc & d)

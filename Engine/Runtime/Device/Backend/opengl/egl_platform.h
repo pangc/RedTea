@@ -13,16 +13,15 @@ namespace device
 		EGLPlatform() = default;
 		static EGLPlatform* Create();
 		virtual void Destroy() override;
-		virtual void* GetWindow() override { return mWindows; }
-		virtual void SetWindow(void *p) override { mWindows = p; }
+		virtual void* GetWindow() override { return mNativeWindows; }
+		virtual void SetWindow(void *p) override { mNativeWindows = p; }
 		virtual bool InitContext() override;
-		virtual SwapChainHandle CreateSwapChain() override;
+		virtual SwapChainHandle CreateSwapChain(const SwapChainDesc& d) override;
 		virtual void MakeCurrent(SwapChainHandle draw, SwapChainHandle read) override;
 	private:
 		EGLBoolean MakeCurrent(EGLSurface drawSurface, EGLSurface readSurface);
-		EGLSurface CreateSurface(bool isTransparent = false);
+		EGLSurface CreateSurface(uint16_t width, uint16_t height, uint16_t msaa, bool isTransparent = false);
 
-		void *nativeWindow = nullptr;
 		EGLDisplay mEGLDisplay = EGL_NO_DISPLAY;
 		EGLContext mEGLContext = EGL_NO_CONTEXT;
 
@@ -36,7 +35,7 @@ namespace device
 
 		//opengl shared context
 		void* sharedContext = EGL_NO_CONTEXT;
-		void* mWindows;
+		void* mNativeWindows;
 	};
 }
 }

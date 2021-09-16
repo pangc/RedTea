@@ -82,11 +82,11 @@ namespace device
 		}
 	}
 
-	SwapChainHandle EGLPlatform::CreateSwapChain()
+	SwapChainHandle EGLPlatform::CreateSwapChain(const SwapChainDesc& d)
 	{
-		EGLSurface sur = CreateSurface();
-		GLSwapChain* chian = new GLSwapChain(sur);
-		SwapChainHandle handle = SwapChainHandle::Create(chian);
+		EGLSurface sur = CreateSurface(d.width, d.height, d.msaa, d.isTransparent);
+		GLSwapChain* chain = new GLSwapChain(sur);
+		SwapChainHandle handle = SwapChainHandle::Create(chain);
 		return handle;
 	}
 
@@ -112,9 +112,15 @@ namespace device
 		return EGL_TRUE;
 	}
 
-	EGLSurface EGLPlatform::CreateSurface(bool isTransparent)
+	EGLSurface EGLPlatform::CreateSurface(uint16_t width, uint16_t height, uint16_t msaa, bool isTransparent)
 	{
-		EGLSurface surface = eglCreateWindowSurface(mEGLDisplay, isTransparent ? mEGLTransparentConfig : mEGLConfig, (EGLNativeWindowType)nativeWindow, nullptr);
+		EGLint attribs[] = {
+			EGL_WIDTH, EGLint(width),
+			EGL_HEIGHT, EGLint(height),
+			EGL_NONE
+		};
+		EGLSurface surface = eglCreateWindowSurface(mEGLDisplay, isTransparent ? mEGLTransparentConfig : mEGLConfig, (EGLNativeWindowType)mNativeWindows, nullptr);
+		EGLint error = eglGetError();
 		if (surface == EGL_NO_SURFACE)
 		{
 			LOGE("CreateSurface failed");

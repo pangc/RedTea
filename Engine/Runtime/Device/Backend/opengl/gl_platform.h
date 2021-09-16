@@ -15,7 +15,7 @@ namespace device
 		virtual ~GLPlatform() {}
 		virtual bool InitContext() = 0;
 		virtual void MakeCurrent(SwapChainHandle draw, SwapChainHandle read) = 0;
-		virtual SwapChainHandle CreateSwapChain() = 0;
+		virtual SwapChainHandle CreateSwapChain(const SwapChainDesc& d) = 0;
 	};
 }
 }
