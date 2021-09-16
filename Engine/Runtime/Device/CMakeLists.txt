@@ -1,12 +1,17 @@
 set(TARGET Device)
 
 set(HEADER_FILES
+	native_window.h
     window.h
 )
 
 set(SOURCE_FILES
     window.cpp
 )
+
+if(MSVC)
+list(APPEND SOURCE_FILES native_window_win.cpp)
+endif()
 
 set(RHI_FILES
     RHI/command_buffer.h

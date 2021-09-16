@@ -1,5 +1,7 @@
 #include "window.h"
 #include<SDL.h>
+#include "native_window.h"
+
 namespace redtea
 {
 namespace device
@@ -39,7 +41,7 @@ namespace device
 
 	void * RedteaWindow::GetNativeWindow()
 	{
-		return nullptr;
+		return getNativeWindow((SDL_Window*)mWindow);
 	}
 
 	void RedteaWindow::Destroy()
