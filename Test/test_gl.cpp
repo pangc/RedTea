@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <string>
 #include "../Engine/Runtime/Application/redtea_app.h"
-#include "../Engine/Runtime/Device/Backend/opengl/gles_device.h"
+#include "../Engine/Runtime/Device/Backend/opengl/gl_device.h"
 
 TEST(GL, CreateWindows)
 {
@@ -10,7 +10,7 @@ TEST(GL, CreateWindows)
 	app.Initialize();
 	
 	// init gl
-	auto device = new device::ESDevice();
+	auto device = new device::GLSDevice();
 	device->InitDevice(app.GetWindow());
 	app.Run();
 }
