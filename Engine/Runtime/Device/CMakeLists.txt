@@ -18,8 +18,13 @@ set(RHI_FILES
 
 if (USE_OPENGL)
 set(GLES_FILES 
-    Backend/opengl/gles_device.h
-    Backend/opengl/gles_device.cpp
+    Backend/opengl/gl_device.h
+    Backend/opengl/gl_device.cpp
+	Backend/opengl/gl_resource.h
+    Backend/opengl/gl_resource.cpp
+	Backend/opengl/gl_platform.h
+	Backend/opengl/egl_platform.h
+    Backend/opengl/egl_platform.cpp
 )
 list(APPEND RHI_FILES ${GLES_FILES})
 endif()

@@ -1,12 +1,24 @@
-#include "gles_device.h"
+#include "egl_platform.h"
 #include "logger/logger.h"
 #include "GLES3/gl3.h"
+#include "common.h"
 
 namespace redtea
 {
 namespace device
 {
-	bool ESDevice::InitDevice(void* window)
+	EGLPlatform * EGLPlatform::Create()
+	{
+		EGLPlatform *platform = new EGLPlatform();
+		return platform;
+	}
+
+	void EGLPlatform::Destroy()
+	{
+		delete this;
+	}
+
+	bool EGLPlatform::InitContext()
 	{
 		mEGLDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 		EGLint major, minor;
@@ -68,77 +80,28 @@ namespace device
 			mEGLDummySurface = EGL_NO_SURFACE;
 			return false;
 		}
-
-		InitializeGlExtensions();
-		return true;
 	}
 
-	SwapChainHandle ESDevice::CreateSwapchain()
+	SwapChainHandle EGLPlatform::CreateSwapChain()
 	{
-		return SwapChainHandle();
+		EGLSurface sur = CreateSurface();
+		GLSwapChain* chian = new GLSwapChain(sur);
+		SwapChainHandle handle = SwapChainHandle::Create(chian);
+		return handle;
 	}
 
-	HeapHandle ESDevice::CreateHeap(const HeapDesc & d)
+	void EGLPlatform::MakeCurrent(SwapChainHandle draw, SwapChainHandle read)
 	{
-		return HeapHandle();
-	}
-
-	TextureHandle ESDevice::CreateTexture(const TextureDesc & d)
-	{
-		return TextureHandle();
-	}
-
-	SamplerStateHandle ESDevice::CreateSampler(const SamplerDesc & d)
-	{
-		return SamplerStateHandle();
-	}
-
-	VertexBufferHandle ESDevice::CreateVertexBuffer(const BufferDesc & d)
-	{
-		return VertexBufferHandle();
-	}
-
-	IndexBufferHandle ESDevice::CreateIndexBuffer(const BufferDesc & d)
-	{
-		return IndexBufferHandle();
-	}
-
-	InputLayoutHandle ESDevice::CreateInputLayout(std::vector<VertexAttributeDesc> descs)
-	{
-		return InputLayoutHandle();
-	}
-
-	ShaderHandle ESDevice::CreateShader(const ShaderDesc & d)
-	{
-		return ShaderHandle();
-	}
-
-	FrameBufferHandle ESDevice::CreateFrameBuffer()
-	{
-		return FrameBufferHandle();
-	}
-
-	PipelineStateHandle ESDevice::CreatePiplelineState(const PipelineDesc & d)
-	{
-		return PipelineStateHandle();
-	}
-
-	ComputePipelineState ESDevice::CreateComputePipelineState(const ComputePipelineDesc & d)
-	{
-		return ComputePipelineState();
-	}
-
-	void ESDevice::InitializeGlExtensions()
-	{
-		GLint n;
-		glGetIntegerv(GL_NUM_EXTENSIONS, &n);
-		for (GLint i = 0; i < n; ++i) {
-			const char * const extension = (const char*)glGetStringi(GL_EXTENSIONS, (GLuint)i);
-			if(extension)
-				glExtensions.insert(extension);
+		GLSwapChain* dptr = (GLSwapChain*)draw.Get()->GetNativeObject();
+		GLSwapChain* rptr = (GLSwapChain*)read.Get()->GetNativeObject();
+		EGLBoolean succ = MakeCurrent(dptr->GetNativeResource(), rptr->GetNativeResource());
+		if (!succ)
+		{
+			LOGE("Make Current failed");
 		}
 	}
-	EGLBoolean ESDevice::MakeCurrent(EGLSurface drawSurface, EGLSurface readSurface)
+
+	EGLBoolean EGLPlatform::MakeCurrent(EGLSurface drawSurface, EGLSurface readSurface)
 	{
 		if (UNLIKELY((drawSurface != mCurrentDrawSurface || readSurface != mCurrentReadSurface)))
 		{
@@ -147,6 +110,16 @@ namespace device
 			return eglMakeCurrent(mEGLDisplay, drawSurface, readSurface, mEGLContext);
 		}
 		return EGL_TRUE;
+	}
+
+	EGLSurface EGLPlatform::CreateSurface(bool isTransparent)
+	{
+		EGLSurface surface = eglCreateWindowSurface(mEGLDisplay, isTransparent ? mEGLTransparentConfig : mEGLConfig, (EGLNativeWindowType)nativeWindow, nullptr);
+		if (surface == EGL_NO_SURFACE)
+		{
+			LOGE("CreateSurface failed");
+		}
+		return surface;
 	}
 }
 }

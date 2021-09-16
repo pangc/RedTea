@@ -1,17 +1,18 @@
 #pragma once
 #include "../../RHI/device.h"
-#include "EGL/egl.h"
-#include "EGL/eglext.h"
+#include "gl_platform.h"
 #include <unordered_set>
 
 namespace redtea
 {
 namespace device
 {
-	class ESDevice : public IDevice
+	class GLSDevice : public IDevice
 	{
 	public:
+		virtual ~GLSDevice();
 		virtual bool InitDevice(void* windows) override;
+		virtual GraphicsAPI GetGraphicsAPI() override { return GraphicsAPI::GLES3; }
 		virtual SwapChainHandle CreateSwapchain() override;
 		virtual HeapHandle CreateHeap(const HeapDesc& d) override;
 		virtual TextureHandle CreateTexture(const TextureDesc& d) override;
@@ -25,22 +26,8 @@ namespace device
 		virtual ComputePipelineState CreateComputePipelineState(const ComputePipelineDesc& d) override;
 	private:
 		void InitializeGlExtensions();
-		EGLBoolean MakeCurrent(EGLSurface drawSurface, EGLSurface readSurface);
-
-		EGLDisplay mEGLDisplay = EGL_NO_DISPLAY;
-		EGLContext mEGLContext = EGL_NO_CONTEXT;
-
-		EGLSurface mCurrentDrawSurface = EGL_NO_SURFACE;
-		EGLSurface mCurrentReadSurface = EGL_NO_SURFACE;
-
-		EGLConfig mEGLConfig = EGL_NO_CONFIG_KHR;
-		EGLConfig mEGLTransparentConfig = EGL_NO_CONFIG_KHR;
-
-		EGLSurface mEGLDummySurface = EGL_NO_SURFACE;
-
-		//opengl shared context
-		void* sharedContext = EGL_NO_CONTEXT;
 		std::unordered_set<std::string> glExtensions;
+		GLPlatform* platform;
 	};
 }
 }

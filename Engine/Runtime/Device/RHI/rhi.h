@@ -6,10 +6,18 @@ namespace redtea
 {
 namespace device
 {
-	class ISwapChain : public IResource
+	enum class GraphicsAPI : uint8_t
+	{
+		GLES3,
+		VLUKAN,
+		METAL,
+		DX11,
+		DX12
+	};
+
+	class ISwapChain : public RefCounter<IResource>
 	{
 	public:
-		virtual void Present() = 0;
 		virtual void Resize(uint16_t width, uint16_t height) = 0;
 	};
 	typedef RefCountPtr<ISwapChain> SwapChainHandle;
@@ -27,7 +35,7 @@ namespace device
 		HeapType type;
 	};
 
-	class IHeap : public IResource
+	class IHeap : public RefCounter<IResource>
 	{
 	public:
 		virtual ~IHeap() {}
@@ -151,7 +159,7 @@ namespace device
 		Count
 	};
 
-	class IBuffer : public IResource
+	class IBuffer : public RefCounter<IResource>
 	{
 	public:
 		virtual ~IBuffer() {}
@@ -179,7 +187,7 @@ namespace device
 		constexpr VertexAttributeDesc& setStride(uint32_t value) { stride = value; return *this; }
 	};
 
-	class IInputLayout : public IResource
+	class IInputLayout : public RefCounter<IResource>
 	{
 	public:
 		std::vector<VertexAttributeDesc> attribtues;
@@ -246,7 +254,7 @@ namespace device
 
 	};
 
-	class ITexture : public IResource
+	class ITexture : public RefCounter<IResource>
 	{
 	public:
 		TextureDesc& GetDesc() { return desc; }
@@ -285,7 +293,7 @@ namespace device
 
 	};
 
-	class ISamplerState : public IResource
+	class ISamplerState : public RefCounter<IResource>
 	{
 	public:
 		SamplerDesc& GetDesc() { return desc; }
@@ -319,7 +327,7 @@ namespace device
 		std::string entryName = "main";
 	};
 
-	class IShader : public IResource
+	class IShader : public RefCounter<IResource>
 	{
 	public:
 		ShaderDesc& GetDesc() { return desc; };
@@ -525,7 +533,7 @@ namespace device
 		constexpr RenderState& SetRasterState(const RasterState& value) { rasterState = value; return *this; }
 	};
 
-	class IFrameBuffer : public IResource
+	class IFrameBuffer : public RefCounter<IResource>
 	{
 	public:
 		std::vector<TextureHandle> color;
@@ -546,7 +554,7 @@ namespace device
 		PipelineDesc& SetFragmentShader(IShader* value) { FS = value; return *this; }
 	};
 
-	class IPipelineState : public IResource
+	class IPipelineState : public RefCounter<IResource>
 	{
 	public:
 		PipelineDesc& GetDesc() { return desc; };
@@ -561,7 +569,7 @@ namespace device
 		ComputePipelineDesc& SetComputeShader(IShader* value) { CS = value; return *this; }
 	};
 
-	class IComputePipelineState : public IResource
+	class IComputePipelineState : public RefCounter<IResource>
 	{
 	public:
 		ComputePipelineDesc& GetDesc() { return desc; };
