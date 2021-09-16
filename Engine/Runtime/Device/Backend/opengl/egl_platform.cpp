@@ -114,11 +114,7 @@ namespace device
 
 	EGLSurface EGLPlatform::CreateSurface(uint16_t width, uint16_t height, uint16_t msaa, bool isTransparent)
 	{
-		EGLint attribs[] = {
-			EGL_WIDTH, EGLint(width),
-			EGL_HEIGHT, EGLint(height),
-			EGL_NONE
-		};
+
 		EGLSurface surface = eglCreateWindowSurface(mEGLDisplay, isTransparent ? mEGLTransparentConfig : mEGLConfig, (EGLNativeWindowType)mNativeWindows, nullptr);
 		EGLint error = eglGetError();
 		if (surface == EGL_NO_SURFACE)
