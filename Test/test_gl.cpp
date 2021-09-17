@@ -11,6 +11,13 @@ TEST(GL, CreateWindows)
 	
 	// init gl
 	auto device = new device::GLSDevice();
-	device->InitDevice(app.GetWindow());
+	device->InitDevice(app.GetWindow()->GetNativeWindow());
+	device::SwapChainDesc desc;
+	desc.SetWidth(512)
+		.SetHeight(512)
+		.SetTransparent(false)
+		.SetMsaaSample(4);
+	auto swapchain = device->CreateSwapchain(desc);
+	device->MakeCurrent(swapchain, swapchain);
 	app.Run();
 }
