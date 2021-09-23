@@ -80,12 +80,14 @@ namespace device
 			mEGLDummySurface = EGL_NO_SURFACE;
 			return false;
 		}
+		return true;
 	}
 
 	SwapChainHandle EGLPlatform::CreateSwapChain(const SwapChainDesc& d)
 	{
 		EGLSurface sur = CreateSurface(d.width, d.height, d.msaa, d.isTransparent);
-		GLSwapChain* chain = new GLSwapChain(sur);
+		GLSwapChain* chain = new GLSwapChain();
+		chain->Init(sur);
 		SwapChainHandle handle = SwapChainHandle::Create(chain);
 		return handle;
 	}

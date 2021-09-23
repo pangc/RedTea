@@ -6,6 +6,8 @@ namespace redtea
 {
 namespace device
 {
+	static constexpr size_t MAX_VERTEX_ATTRIBUTE_COUNT = 16;
+
 	enum class GraphicsAPI : uint8_t
 	{
 		GLES3,
@@ -71,7 +73,8 @@ namespace device
 	enum class BufferType : uint8_t
 	{
 		VertexBuffer,
-		IndexBuffer
+		IndexBuffer,
+		UniformBuffer
 	};
 
 	struct BufferDesc
@@ -83,6 +86,42 @@ namespace device
 		constexpr BufferDesc& SetBufferType(BufferType value) { type = value; return *this; }
 		constexpr BufferDesc& SetSize(uint32_t value) { size = value; return *this; }
 		constexpr BufferDesc& SetCpuAccess(CpuAccessMode value) { cpuAccess = value; return *this; }
+	};
+
+	class BufferData
+	{
+	public:
+		BufferData() = default;
+		~BufferData() {};
+
+		BufferData(const BufferData& rhs) = delete;
+		BufferData& operator=(const BufferData& rhs) = delete;
+
+		BufferData(BufferData&& rhs) noexcept
+			: buffer(rhs.buffer), size(rhs.size)
+		{
+			rhs.buffer = nullptr;
+			rhs.size = 0;
+		}
+
+		BufferData& operator=(BufferData&& rhs) noexcept
+		{
+			if (this != &rhs) {
+				buffer = rhs.buffer;
+				size = rhs.size;
+				rhs.buffer = nullptr;
+				rhs.size = 0;
+			}
+			return *this;
+		}
+
+		BufferData(void const* buffer, size_t size) noexcept
+			: buffer(const_cast<void*>(buffer)), size(size)
+		{
+		}
+
+		void* buffer = nullptr;
+		size_t size = 0;
 	};
 
 	enum class ResourceFormat : uint32_t
@@ -177,9 +216,10 @@ namespace device
 	class IBuffer : public RefCounter<IResource>
 	{
 	public:
+		IBuffer(BufferDesc d) : desc(d) {};
 		virtual ~IBuffer() {}
 		BufferDesc& GetDescription() { return desc; };
-	private:
+	protected:
 		BufferDesc desc;
 	};
 	typedef RefCountPtr<IBuffer> BufferHandle;
@@ -202,20 +242,10 @@ namespace device
 		constexpr VertexAttributeDesc& setStride(uint32_t value) { stride = value; return *this; }
 	};
 
-	class IInputLayout : public RefCounter<IResource>
+	class IRenderPrimitive : public IResource
 	{
-	public:
-		std::vector<VertexAttributeDesc> attribtues;
 	};
-	typedef RefCountPtr<IInputLayout> InputLayoutHandle;
-
-	class IVertexBuffer : public IBuffer
-	{
-	public:
-		virtual ~IVertexBuffer() {}
-	};
-	typedef RefCountPtr<IVertexBuffer> VertexBufferHandle;
-
+	typedef RefCountPtr<IRenderPrimitive> RenderPrimitiveHandle;
 
 	class IIndexBuffer : public IBuffer
 	{
