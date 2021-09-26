@@ -35,6 +35,15 @@ set(GLES_FILES
 	
 )
 list(APPEND RHI_FILES ${GLES_FILES})
+
+elseif(USE_DX12)
+set(DX_FILES 
+	Backend/directx/dx12_device.h
+    Backend/directx/dx12_device.cpp
+	Backend/directx/dx12_resource.h
+    Backend/directx/dx12_resource.cpp
+)
+list(APPEND RHI_FILES ${DX_FILES})
 endif()
 SOURCE_GROUP(RHI FILES ${RHI_FILES})
 
@@ -58,6 +67,10 @@ if(NOT ${OpenGL_EGL_FOUND})
 		list(APPEND INCLUDE_PATH ${EGL_LIBRARY_PATH}/include)
 	endif()
 endif()
+elseif(USE_DX12)
+if(MSVC)
+	list(APPEND COMPILED_LIB d3d12 dxgi d3dcompiler)
+	endif()
 endif()
 
 add_library(${TARGET} STATIC ${DYNAMIC_LIB} ${HEADER_FILES}  ${SOURCE_FILES} ${RHI_FILES})

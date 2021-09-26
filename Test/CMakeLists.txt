@@ -6,8 +6,11 @@ set(TEST_FILES
 	test_core.cpp
 	test_device.cpp
 	test_math.cpp
-	test_gl.cpp
 )
+
+if(USE_OPENGL)
+list(APPEND TEST_FILES test_gl.cpp)
+endif()
 
 set(TEST_LIBS
 	Core
