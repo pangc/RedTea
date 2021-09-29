@@ -2,6 +2,7 @@
 #include "../../RHI/rhi.h"
 #include "../../RHI/device.h"
 #include <d3d12.h>
+#include <dxgi1_6.h>
 
 namespace redtea
 {
@@ -10,7 +11,7 @@ namespace device
 	class DX12Device : public IDevice
 	{
 	public:
-		virtual ~DX12Device();
+		virtual ~DX12Device() override;
 		virtual bool InitDevice(void* windows) override;
 		virtual GraphicsAPI GetGraphicsAPI() override { return GraphicsAPI::DX12; }
 		virtual SwapChainHandle CreateSwapchain(const SwapChainDesc& d) override;
@@ -25,7 +26,7 @@ namespace device
 		virtual PipelineStateHandle CreatePiplelineState(const PipelineDesc& d) override;
 		virtual ComputePipelineState CreateComputePipelineState(const ComputePipelineDesc& d) override;
 	private:
-        void InitDevice();
+		void FindAdaptor(IDXGIFactory1* pFactory, IDXGIAdapter1** ppAdapter);
         ID3D12Device* mDevice = nullptr;
 	};
 }

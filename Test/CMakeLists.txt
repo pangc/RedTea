@@ -10,6 +10,8 @@ set(TEST_FILES
 
 if(USE_OPENGL)
 list(APPEND TEST_FILES test_gl.cpp)
+elseif(USE_DX12)
+list(APPEND TEST_FILES test_dx.cpp)
 endif()
 
 set(TEST_LIBS
