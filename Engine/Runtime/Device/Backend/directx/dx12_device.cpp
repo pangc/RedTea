@@ -6,37 +6,47 @@ using Microsoft::WRL::ComPtr;
 
 namespace redtea {
 namespace device{
+#define LOGIfFailed(hr, msg) if(FAILED(hr)){LOGE(msg); return false;}
 
 bool DX12Device::InitDevice(void* windows)
 {
-	ComPtr<IDXGIFactory4> dxgiFactory;
-	auto hr = CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory));
+	auto hr = CreateDXGIFactory1(IID_PPV_ARGS(&mFactory));
 
-	if (FAILED(hr)) {
-		LOGE("DXGI factory creation failed.");
-		return false;
-	}
+	LOGIfFailed(hr, "DXGI factory creation failed.");
 
 	// Find Adaptor
 	ComPtr<IDXGIAdapter1> hardwareAdapter;
-	FindAdaptor(dxgiFactory.Get(), &hardwareAdapter);
+	FindAdaptor(mFactory, &hardwareAdapter);
 
 	hr = D3D12CreateDevice(
 		hardwareAdapter.Get(),
 		D3D_FEATURE_LEVEL_12_0,
 		IID_PPV_ARGS(&mDevice)
 	);
+	LOGIfFailed(hr, "DXGI create device failed.");
 
-	if (FAILED(hr)) {
-		LOGE("DXGI create device failed.");
-		return false;
-	}
 
+	// Init Command Queue
+	D3D12_COMMAND_QUEUE_DESC queueDesc = {};
+	queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+	queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+
+	hr = mDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&mQueue));
+	LOGIfFailed(hr, "DXGI create command queue failed.");
 	return true;
 }
 
-SwapChainHandle DX12Device::CreateSwapchain(const SwapChainDesc & d)
+SwapChainHandle DX12Device::CreateSwapchain(const SwapChainDesc & desc)
 {
+	DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
+	swapChainDesc.BufferCount = SWAPCHAIN_BUFFER_COUNT;
+	swapChainDesc.Width = desc.width;
+	swapChainDesc.Height = desc.height;
+	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+	swapChainDesc.SampleDesc.Count = 1;
+
 	return SwapChainHandle();
 }
 

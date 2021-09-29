@@ -28,6 +28,8 @@ namespace device
 	private:
 		void FindAdaptor(IDXGIFactory1* pFactory, IDXGIAdapter1** ppAdapter);
         ID3D12Device* mDevice = nullptr;
+		IDXGIFactory4* mFactory = nullptr;
+		ID3D12CommandQueue* mQueue = nullptr;
 	};
 }
 }

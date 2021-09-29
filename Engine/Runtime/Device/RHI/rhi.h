@@ -7,6 +7,7 @@ namespace redtea
 namespace device
 {
 	static constexpr size_t MAX_VERTEX_ATTRIBUTE_COUNT = 16;
+	static constexpr size_t SWAPCHAIN_BUFFER_COUNT = 3;
 
 	enum class GraphicsAPI : uint8_t
 	{
