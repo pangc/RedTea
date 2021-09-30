@@ -7,12 +7,22 @@
 namespace redtea {
 namespace device {
 
-	class DXSwapChain : public ISwapChain
-	{
-		DXSwapChain(SwapChainDesc& desc);
-	private:
-		IDXGISwapChain1* mSwapChain;
-	};
+class DXSwapChain : public ISwapChain
+{
+public:
+	DXSwapChain(IDXGISwapChain1* swapchain);
+	virtual void Resize(uint16_t width, uint16_t height) override {};
+private:
+	RefCountPtr<IDXGISwapChain1> mSwapChain;
+};
+
+class DXBuffer : public IBuffer
+{
+public:
+	DXBuffer(const BufferDesc &d);
+	RefCountPtr<ID3D12Resource> resource;
+	D3D12_RESOURCE_DESC resourceDesc{};
+};
 
 }
 }

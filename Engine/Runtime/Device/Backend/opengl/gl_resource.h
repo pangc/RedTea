@@ -21,7 +21,7 @@ namespace device
 	class GLBuffer : public IBuffer
 	{
 	public:
-		GLBuffer(BufferDesc d);
+		GLBuffer(const BufferDesc& d);
 		GLuint id;
 		GLenum target;
 		GLenum usage;

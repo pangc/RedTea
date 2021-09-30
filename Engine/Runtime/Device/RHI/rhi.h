@@ -217,7 +217,7 @@ namespace device
 	class IBuffer : public RefCounter<IResource>
 	{
 	public:
-		IBuffer(BufferDesc d) : desc(d) {};
+		IBuffer(const BufferDesc& d) : desc(d) {};
 		virtual ~IBuffer() {}
 		BufferDesc& GetDescription() { return desc; };
 	protected:

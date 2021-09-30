@@ -2,7 +2,12 @@
 namespace redtea {
 namespace device{
 
-DXSwapChain::DXSwapChain(SwapChainDesc& desc)
+DXSwapChain::DXSwapChain(IDXGISwapChain1* swapchain)
+{
+	mSwapChain.Attach(swapchain);
+}
+
+DXBuffer::DXBuffer(const BufferDesc &desc) : IBuffer(desc)
 {
 	
 }

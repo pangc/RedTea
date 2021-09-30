@@ -15,7 +15,7 @@ void GLSwapChain::Resize(uint16_t width, uint16_t height)
 {
 }
 
-GLBuffer::GLBuffer(BufferDesc d) : IBuffer(d)
+GLBuffer::GLBuffer(const BufferDesc& d) : IBuffer(d)
 {
 	switch (desc.type)
 	{
