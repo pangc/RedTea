@@ -12,7 +12,7 @@ namespace device
 	{
 	public:
 		virtual ~DX12Device() override;
-		virtual bool InitDevice(void* windows) override;
+		virtual bool InitDevice(void* window) override;
 		virtual GraphicsAPI GetGraphicsAPI() override { return GraphicsAPI::DX12; }
 		virtual SwapChainHandle CreateSwapchain(const SwapChainDesc& d) override;
 		virtual void MakeCurrent(SwapChainHandle draw, SwapChainHandle read) override;
@@ -30,6 +30,7 @@ namespace device
         ID3D12Device* mDevice = nullptr;
 		IDXGIFactory4* mFactory = nullptr;
 		ID3D12CommandQueue* mQueue = nullptr;
+		void* nativeWindow;
 	};
 }
 }

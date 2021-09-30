@@ -8,8 +8,9 @@ namespace redtea {
 namespace device{
 #define LOGIfFailed(hr, msg) if(FAILED(hr)){LOGE(msg); return false;}
 
-bool DX12Device::InitDevice(void* windows)
+bool DX12Device::InitDevice(void* window)
 {
+	nativeWindow = window;
 	auto hr = CreateDXGIFactory1(IID_PPV_ARGS(&mFactory));
 
 	LOGIfFailed(hr, "DXGI factory creation failed.");
@@ -38,6 +39,7 @@ bool DX12Device::InitDevice(void* windows)
 
 SwapChainHandle DX12Device::CreateSwapchain(const SwapChainDesc & desc)
 {
+	IDXGISwapChain1* swapChain;
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
 	swapChainDesc.BufferCount = SWAPCHAIN_BUFFER_COUNT;
 	swapChainDesc.Width = desc.width;
@@ -46,6 +48,8 @@ SwapChainHandle DX12Device::CreateSwapchain(const SwapChainDesc & desc)
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	swapChainDesc.SampleDesc.Count = 1;
+
+	mFactory->CreateSwapChainForHwnd(mQueue, (HWND)nativeWindow, &swapChainDesc, nullptr, nullptr, &swapChain);
 
 	return SwapChainHandle();
 }
