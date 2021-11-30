@@ -17,31 +17,21 @@ set(RHI_FILES
     RHI/command_buffer.h
 	RHI/command_buffer.cpp
 	RHI/rhi.h
+	RHI/misc.h
+	RHI/rhi_base.cpp
 	RHI/resource.h
-	RHI/device.h
+	RHI/containers.h
+	RHI/containers.cpp
+	RHI/rhi_utils.h
+	RHI/rhi_utils.cpp
+	RHI/state-tracking.h
+	RHI/state-tracking.cpp
 )
 
-if (USE_OPENGL)
-set(GLES_FILES 
-    Backend/opengl/gl_device.h
-    Backend/opengl/gl_device.cpp
-	Backend/opengl/gl_context.h
-    Backend/opengl/gl_context.cpp
-	Backend/opengl/gl_resource.h
-    Backend/opengl/gl_resource.cpp
-	Backend/opengl/gl_platform.h
-	Backend/opengl/egl_platform.h
-    Backend/opengl/egl_platform.cpp
-	
-)
-list(APPEND RHI_FILES ${GLES_FILES})
-
+list(APPEND RHI_FILES)
+if(USE_VULKAN)
 elseif(USE_DX12)
-set(DX_FILES 
-	Backend/directx/dx12_device.h
-    Backend/directx/dx12_device.cpp
-	Backend/directx/dx12_resource.h
-    Backend/directx/dx12_resource.cpp
+set(DX_FILES
 )
 list(APPEND RHI_FILES ${DX_FILES})
 endif()
@@ -57,20 +47,10 @@ set(COMPILED_LIB)
 set(INCLUDE_PATH)
 set(DYNAMIC_LIB)
 
-if (USE_OPENGL)
-find_package(OpenGL REQUIRED)
-list(APPEND COMPILED_LIB ${OPENGL_LIBRARIES})
-if(NOT ${OpenGL_EGL_FOUND})
-	if(MSVC)
-		set(EGL_LIBRARY_PATH ${ROOT_PATH}/ThirdParty/egl)
-		list(APPEND COMPILED_LIB ${EGL_LIBRARY_PATH}/libEGL.lib ${EGL_LIBRARY_PATH}/libGLESv2.lib)
-		list(APPEND INCLUDE_PATH ${EGL_LIBRARY_PATH}/include)
-	endif()
-endif()
-elseif(USE_DX12)
+if(USE_DX12)
 if(MSVC)
 	list(APPEND COMPILED_LIB d3d12 dxgi d3dcompiler)
-	endif()
+endif()
 endif()
 
 add_library(${TARGET} STATIC ${DYNAMIC_LIB} ${HEADER_FILES}  ${SOURCE_FILES} ${RHI_FILES})
