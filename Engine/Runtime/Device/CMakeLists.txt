@@ -32,11 +32,29 @@ list(APPEND RHI_FILES)
 if(USE_VULKAN)
 elseif(USE_DX12)
 set(DX_FILES
+	Backend/d3d12/d3d12.h
+	Backend/d3d12/d3d12-backend.h
+	Backend/d3d12/d3d12-buffer.cpp
+	Backend/d3d12/d3d12-commandlist.cpp
+	Backend/d3d12/d3d12-compute.cpp
+	Backend/d3d12/d3d12-constants.cpp
+	Backend/d3d12/d3d12-descriptor-heap.cpp
+	Backend/d3d12/d3d12-device.cpp
+	Backend/d3d12/d3d12-graphics.cpp
+	Backend/d3d12/d3d12-meshlets.cpp
+	Backend/d3d12/d3d12-queries.cpp
+	Backend/d3d12/d3d12-raytracing.cpp
+	Backend/d3d12/d3d12-resource-bindings.cpp
+	Backend/d3d12/d3d12-shader.cpp
+	Backend/d3d12/d3d12-state-tracking.cpp
+	Backend/d3d12/d3d12-texture.cpp
+	Backend/d3d12/d3d12-upload.cpp
+	Backend/d3d12/dxgi-format.h
+	Backend/d3d12/dxgi-format.cpp
 )
 list(APPEND RHI_FILES ${DX_FILES})
 endif()
 SOURCE_GROUP(RHI FILES ${RHI_FILES})
-
 set(DEVICE_LIB
     SDL2-static
     SDL2main
