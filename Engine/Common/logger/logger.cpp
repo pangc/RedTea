@@ -22,6 +22,7 @@ namespace common
 			fprintf(error, "%s", buf.get());
 			break;
 		}
+		buf.reset();
 		return *this;
 	}
 
