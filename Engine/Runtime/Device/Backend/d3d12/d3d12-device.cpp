@@ -65,6 +65,7 @@ namespace device
     {
         m_Context.device = desc.pDevice;
         m_Context.messageCallback = desc.errorCB;
+		m_Context.nativeWindow = desc.nativeWindow;
 
         if (desc.pGraphicsCommandQueue)
             m_Queues[int(CommandQueue::Graphics)] = std::make_unique<Queue>(m_Context, desc.pGraphicsCommandQueue);
@@ -225,7 +226,7 @@ namespace device
         {
         case ObjectTypes::D3D12_Device:
             return Object(m_Context.device);
-        case ObjectTypes::Nvrhi_D3D12_Device:
+        case ObjectTypes::D3D12_DXDevice:
             return Object(this);
         default:
             return nullptr;
@@ -387,7 +388,7 @@ namespace device
         heapDesc.Alignment = D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT;
         heapDesc.Properties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
         heapDesc.Properties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-        heapDesc.Properties.CreationNodeMask = 1; // no mGPU support in nvrhi so far
+        heapDesc.Properties.CreationNodeMask = 1; // no mGPU support
         heapDesc.Properties.VisibleNodeMask = 1;
 
         switch (d.type)
@@ -430,6 +431,14 @@ namespace device
         heap->desc = d;
         return HeapHandle::Create(heap);
     }
+
+	SwapChainHandle Device::createSwapChain(const SwapChainDesc& desc)
+	{
+		auto queue = getQueue(CommandQueue::Graphics);
+		SwapChain* swapChain = new SwapChain(desc, m_Context.nativeWindow, queue->queue);
+		return SwapChainHandle::Create(swapChain);
+	}
+
 
 }
 }

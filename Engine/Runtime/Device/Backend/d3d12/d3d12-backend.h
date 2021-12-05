@@ -9,12 +9,14 @@
 #include <mutex>
 #include <unordered_map>
 #include <utility>
+#include <dxgi1_6.h>
 
 #include "../../RHI/rhi.h"
 #include "../../RHI/containers.h"
 #include "../../RHI/rhi_utils.h"
 #include "../../RHI/state-tracking.h"
 #include "dxgi-format.h"
+
 namespace redtea {
 namespace device {
 	// describes a texture binding --- used to manage SRV / VkImageView per texture
@@ -114,11 +116,12 @@ namespace device {
         RefCountPtr<ID3D12Device2> device2;
         RefCountPtr<ID3D12Device5> device5;
 
-
         RefCountPtr<ID3D12CommandSignature> drawIndirectSignature;
         RefCountPtr<ID3D12CommandSignature> dispatchIndirectSignature;
         RefCountPtr<ID3D12QueryHeap> timerQueryHeap;
         RefCountPtr<Buffer> timerQueryResolveBuffer;
+
+		HWND nativeWindow;
 
         IMessageCallback* messageCallback = nullptr;
         void error(const std::string& message) const;
@@ -957,6 +960,27 @@ namespace device {
         std::shared_ptr<InternalCommandList> createInternalCommandList() const;
     };
 
+	class SwapChain : public RefCounter<ISwapChain>
+	{
+	public:
+		explicit SwapChain(const SwapChainDesc& desc, HWND hWnd, RefCountPtr<ID3D12CommandQueue> queue);
+		~SwapChain() override;
+
+		bool CreateSwapChainBuffer(DeviceHandle device);
+		bool ReleaseSwapChainBuffer();
+
+		const SwapChainDesc& getDesc() const override { return desc; }
+
+		SwapChainDesc desc;
+		RefCountPtr<IDXGISwapChain3>                m_SwapChain;
+		DXGI_SWAP_CHAIN_DESC1                       m_SwapChainDesc{};
+		DXGI_SWAP_CHAIN_FULLSCREEN_DESC             m_FullScreenDesc{};
+
+
+		std::vector<RefCountPtr<ID3D12Resource>>    m_SwapChainBuffers;
+		std::vector<TextureHandle>					m_RhiSwapChainBuffers;
+	};
+
     class Device final : public RefCounter<DXDevice>
     {
     public:
@@ -970,7 +994,7 @@ namespace device {
         // IDevice implementation
 
         HeapHandle createHeap(const HeapDesc& d) override;
-
+		SwapChainHandle createSwapChain(const SwapChainDesc& desc) override;
         TextureHandle createTexture(const TextureDesc& d) override;
         MemoryRequirements getTextureMemoryRequirements(ITexture* texture) override;
         bool bindTextureMemory(ITexture* texture, IHeap* heap, uint64_t offset) override;

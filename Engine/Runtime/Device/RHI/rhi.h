@@ -2337,6 +2337,43 @@ namespace device
 
     typedef RefCountPtr<ICommandList> CommandListHandle;
 
+	//////////////////////////////////////////////////////////////////////////
+	// ISwapChain
+	//////////////////////////////////////////////////////////////////////////
+
+	struct SwapChainDesc
+	{
+		uint32_t width = 0;
+		uint32_t height = 0;
+		uint32_t refreshRate = 60;
+		uint32_t swapChainBufferCount = 3;
+		Format swapChainFormat = Format::SRGBA8_UNORM;
+		uint32_t swapChainSampleCount = 1;
+		uint32_t swapChainSampleQuality = 0;
+		bool allowTearing = false;
+		bool allowModeSwitch = true;
+		bool vsyncEnabled = false;
+
+		constexpr SwapChainDesc& setWidth(uint32_t value) { width = value; return *this; }
+		constexpr SwapChainDesc& setHeight(uint32_t value) { height = value; return *this; }
+		constexpr SwapChainDesc& setRefreshRate(uint32_t value) { refreshRate = value; return *this; }
+		constexpr SwapChainDesc& setSwapChainBufferCount(uint32_t value) { swapChainBufferCount = value; return *this; }
+		constexpr SwapChainDesc& setSwapChainFormat(Format value) { swapChainFormat = value; return *this; }
+		constexpr SwapChainDesc& setSwapChainSampleCount(uint32_t value) { swapChainSampleCount = value; return *this; }
+		constexpr SwapChainDesc& setSwapChainSampleQuality(uint32_t value) { swapChainSampleQuality = value; return *this; }
+		constexpr SwapChainDesc& setAllowTearing(bool value) { allowTearing = value; return *this; }
+		constexpr SwapChainDesc& setAllowModeSwitch(bool value) { allowModeSwitch = value; return *this; }
+	};
+
+	class ISwapChain : public IResource
+	{
+	public:
+		virtual const SwapChainDesc& getDesc() const = 0;
+
+	};
+
+	typedef RefCountPtr<ISwapChain> SwapChainHandle;
+
     //////////////////////////////////////////////////////////////////////////
     // IDevice
     //////////////////////////////////////////////////////////////////////////
@@ -2345,7 +2382,7 @@ namespace device
     {
     public:
         virtual HeapHandle createHeap(const HeapDesc& d) = 0;
-
+		virtual SwapChainHandle createSwapChain(const SwapChainDesc& d) = 0;
         virtual TextureHandle createTexture(const TextureDesc& d) = 0;
         virtual MemoryRequirements getTextureMemoryRequirements(ITexture* texture) = 0;
         virtual bool bindTextureMemory(ITexture* texture, IHeap* heap, uint64_t offset) = 0;

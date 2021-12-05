@@ -34,6 +34,8 @@ elseif(USE_DX12)
 set(DX_FILES
 	Backend/d3d12/d3d12.h
 	Backend/d3d12/d3d12-backend.h
+	Backend/d3d12/d3d12-driver.h
+	Backend/d3d12/d3d12-driver.cpp
 	Backend/d3d12/d3d12-buffer.cpp
 	Backend/d3d12/d3d12-commandlist.cpp
 	Backend/d3d12/d3d12-compute.cpp
@@ -47,6 +49,7 @@ set(DX_FILES
 	Backend/d3d12/d3d12-resource-bindings.cpp
 	Backend/d3d12/d3d12-shader.cpp
 	Backend/d3d12/d3d12-state-tracking.cpp
+	Backend/d3d12/d3d12-swapchain.cpp
 	Backend/d3d12/d3d12-texture.cpp
 	Backend/d3d12/d3d12-upload.cpp
 	Backend/d3d12/dxgi-format.h

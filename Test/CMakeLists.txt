@@ -8,8 +8,7 @@ set(TEST_FILES
 	test_math.cpp
 )
 
-if(USE_OPENGL)
-list(APPEND TEST_FILES test_gl.cpp)
+if(USE_VULKAN)
 elseif(USE_DX12)
 list(APPEND TEST_FILES test_dx.cpp)
 endif()

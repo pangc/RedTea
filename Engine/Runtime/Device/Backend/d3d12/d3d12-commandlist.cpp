@@ -31,7 +31,7 @@ namespace device
 			else
 				return nullptr;
 
-		case ObjectTypes::Nvrhi_D3D12_CommandList:
+		case ObjectTypes::D3D12_DXCommandList:
 			return this;
 
 		default:

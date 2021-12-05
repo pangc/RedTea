@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../RHI/rhi.h"
+#include <common.h>
 
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -8,12 +9,14 @@
 
 #include <d3d12.h>
 
+#define LOGIfFailed(hr, msg) if(FAILED(hr)){LOGE(msg); return false;}
+
 namespace redtea {
 namespace device {
     namespace ObjectTypes
     {
-        constexpr ObjectType Nvrhi_D3D12_Device         = 0x00020101;
-        constexpr ObjectType Nvrhi_D3D12_CommandList    = 0x00020102;
+        constexpr ObjectType D3D12_DXDevice         = 0x00020101;
+        constexpr ObjectType D3D12_DXCommandList    = 0x00020102;
     };
 }
 }
@@ -91,6 +94,7 @@ namespace device {
         ID3D12CommandQueue* pGraphicsCommandQueue = nullptr;
         ID3D12CommandQueue* pComputeCommandQueue = nullptr;
         ID3D12CommandQueue* pCopyCommandQueue = nullptr;
+		HWND nativeWindow = nullptr;
 
         uint32_t renderTargetViewHeapSize = 1024;
         uint32_t depthStencilViewHeapSize = 1024;
