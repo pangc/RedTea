@@ -963,14 +963,20 @@ namespace device {
 	class SwapChain : public RefCounter<ISwapChain>
 	{
 	public:
-		explicit SwapChain(const SwapChainDesc& desc, HWND hWnd, RefCountPtr<ID3D12CommandQueue> queue);
+		explicit SwapChain(const SwapChainDesc& desc, class Device* device, HWND hwnd, RefCountPtr<ID3D12CommandQueue> queue);
 		~SwapChain() override;
 
-		bool CreateSwapChainBuffer(DeviceHandle device);
+		bool CreateSwapChainBuffer();
 		bool ReleaseSwapChainBuffer();
+		TextureHandle GetCurrentBackendBuffer() override;
 
 		const SwapChainDesc& getDesc() const override { return desc; }
-		virtual bool Resize() const override;
+		virtual bool Resize() override;
+		virtual void Present() override;
+    
+		RefCountPtr<ID3D12Fence>                    m_FrameFence;
+		std::vector<HANDLE>                         m_FrameFenceEvents;
+		UINT64                                      m_FrameCount = 1;
 
 		SwapChainDesc desc;
 		RefCountPtr<IDXGISwapChain3>                m_SwapChain;
@@ -980,6 +986,8 @@ namespace device {
 
 		std::vector<RefCountPtr<ID3D12Resource>>    m_SwapChainBuffers;
 		std::vector<TextureHandle>					m_RhiSwapChainBuffers;
+
+		DXDevice*								    m_Device;
 	};
 
     class Device final : public RefCounter<DXDevice>
@@ -1073,7 +1081,8 @@ namespace device {
         GraphicsPipelineHandle createHandleForNativeGraphicsPipeline(IRootSignature* rootSignature, ID3D12PipelineState* pipelineState, const GraphicsPipelineDesc& desc, const FramebufferInfo& framebufferInfo) override;
         MeshletPipelineHandle createHandleForNativeMeshletPipeline(IRootSignature* rootSignature, ID3D12PipelineState* pipelineState, const MeshletPipelineDesc& desc, const FramebufferInfo& framebufferInfo) override;
         IDescriptorHeap* getDescriptorHeap(DescriptorHeapType heapType) override;
-
+        ID3D12Device* getRawDevice() override;
+        
         // Internal interface
         Queue* getQueue(CommandQueue type) { return m_Queues[int(type)].get(); }
 

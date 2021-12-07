@@ -83,6 +83,7 @@ namespace device {
         virtual GraphicsPipelineHandle createHandleForNativeGraphicsPipeline(IRootSignature* rootSignature, ID3D12PipelineState* pipelineState, const GraphicsPipelineDesc& desc, const FramebufferInfo& framebufferInfo) = 0;
         virtual MeshletPipelineHandle createHandleForNativeMeshletPipeline(IRootSignature* rootSignature, ID3D12PipelineState* pipelineState, const MeshletPipelineDesc& desc, const FramebufferInfo& framebufferInfo) = 0;
         virtual IDescriptorHeap* getDescriptorHeap(DescriptorHeapType heapType) = 0;
+        virtual ID3D12Device* getRawDevice() = 0;
     };
 
     typedef RefCountPtr<DXDevice> DXDeviceHandle;

@@ -2369,8 +2369,9 @@ namespace device
 	{
 	public:
 		virtual const SwapChainDesc& getDesc() const = 0;
-		virtual TextureHandle GetCurrentBackendBuffer() const = 0;
-		virtual bool Resize() const = 0;
+		virtual TextureHandle GetCurrentBackendBuffer() = 0;
+		virtual bool Resize() = 0;
+        virtual void Present() = 0;
 	};
 
 	typedef RefCountPtr<ISwapChain> SwapChainHandle;

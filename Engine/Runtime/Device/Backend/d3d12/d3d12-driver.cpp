@@ -102,7 +102,6 @@ namespace device {
 			m_CopyQueue->SetName(L"Copy Queue");
 		}
 
-		hr = m_Device12->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_FrameFence));
 		return true;
 	}
 
@@ -136,8 +135,12 @@ namespace device {
 			.setAllowModeSwitch(true)
 			.setAllowTearing(m_TearingSupported);
 		m_SwapChain = m_Device->createSwapChain(desc);
-		//m_SwapChain->CreateSwapChainBuffer(m_Device);
 		return m_SwapChain;
+	}
+
+	TextureHandle DXDriver::CreateTexture()
+	{
+		return TextureHandle();
 	}
 
 	void DXDriver::BeginFrame()

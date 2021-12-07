@@ -380,6 +380,11 @@ namespace device
         return nullptr;
     }
 
+    ID3D12Device* Device::getRawDevice()
+    {
+        return m_Context.device;
+    }
+
     HeapHandle Device::createHeap(const HeapDesc& d)
     {
         D3D12_HEAP_DESC heapDesc;
@@ -435,7 +440,7 @@ namespace device
 	SwapChainHandle Device::createSwapChain(const SwapChainDesc& desc)
 	{
 		auto queue = getQueue(CommandQueue::Graphics);
-		SwapChain* swapChain = new SwapChain(desc, m_Context.nativeWindow, queue->queue);
+		SwapChain* swapChain = new SwapChain(desc, this, m_Context.nativeWindow, queue->queue);
 		return SwapChainHandle::Create(swapChain);
 	}
 

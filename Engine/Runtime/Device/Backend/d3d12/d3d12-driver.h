@@ -31,9 +31,6 @@ namespace device {
 		RefCountPtr<ID3D12CommandQueue>             m_ComputeQueue;
 		RefCountPtr<ID3D12CommandQueue>             m_CopyQueue;
 		RefCountPtr<IDXGIAdapter>                   m_DxgiAdapter;
-		RefCountPtr<ID3D12Fence>                    m_FrameFence;
-		std::vector<HANDLE>                         m_FrameFenceEvents;
-		UINT64                                      m_FrameCount = 1;
 
 		HWND                                        m_hWnd = nullptr;
 		bool										m_TearingSupported; // Variable rate fresh need tearing support

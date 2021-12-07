@@ -4,8 +4,10 @@ namespace redtea
 {
 namespace device
 {
-	SwapChain::SwapChain(const SwapChainDesc& d, HWND hWnd, RefCountPtr<ID3D12CommandQueue> queue)
+	SwapChain::SwapChain(const SwapChainDesc& d, class Device* device, HWND hWnd, RefCountPtr<ID3D12CommandQueue> queue)
 	{
+		m_Device = device;
+		
 		desc = d;
 		m_FullScreenDesc = {};
 		m_FullScreenDesc.RefreshRate.Numerator = desc.refreshRate;
@@ -50,21 +52,34 @@ namespace device
 		
 		if (FAILED(hr))
 		{
-			LOGD("Create swapchain for hwnd failed£¡");
+			LOGD("Create swapchain for hwnd failed");
+			return;
 		}
 		hr = pSwapChain1->QueryInterface(IID_PPV_ARGS(&m_SwapChain));
 
 		if (FAILED(hr))
 		{
-			LOGD("QueryInterface for swapchain failed£¡");
+			LOGD("QueryInterface for swapchain failed");
+			return;
 		}
+
+		ID3D12Device* rawDevice = m_Device->getRawDevice();
+		hr = rawDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_FrameFence));
+
+		if (FAILED(hr))
+		{
+			LOGD("CreateFence for swapchain failed");
+			return;
+		}
+
+		CreateSwapChainBuffer();
 	}
 
 	SwapChain::~SwapChain()
 	{
 	}
 
-	bool SwapChain::CreateSwapChainBuffer(DeviceHandle device)
+	bool SwapChain::CreateSwapChainBuffer()
 	{
 		m_SwapChainBuffers.resize(m_SwapChainDesc.BufferCount);
 		m_RhiSwapChainBuffers.resize(m_SwapChainDesc.BufferCount);
@@ -86,7 +101,12 @@ namespace device
 			textureDesc.initialState = ResourceStates::Present;
 			textureDesc.keepInitialState = true;
 
-			m_RhiSwapChainBuffers[n] = device->createHandleForNativeTexture(ObjectTypes::D3D12_Resource, Object(m_SwapChainBuffers[n]), textureDesc);
+			m_RhiSwapChainBuffers[n] = m_Device->createHandleForNativeTexture(ObjectTypes::D3D12_Resource, Object(m_SwapChainBuffers[n]), textureDesc);
+		}
+
+		for(UINT bufferIndex = 0; bufferIndex < m_SwapChainDesc.BufferCount; bufferIndex++)
+		{
+			m_FrameFenceEvents.push_back( CreateEvent(nullptr, false, true, NULL) );
 		}
 
 		return true;
@@ -94,6 +114,20 @@ namespace device
 
 	bool SwapChain::ReleaseSwapChainBuffer()
 	{
+		if(!m_Device)
+		{
+			LOGD("deivce is nullptr in SwapChain::ReleaseSwapChainBuffer");
+			return false;
+		}
+		 // Make sure that all frames have finished rendering
+		m_Device->waitForIdle();
+
+		// Release all in-flight references to the render targets
+		m_Device->runGarbageCollection();
+
+		// Set the events so that WaitForSingleObject in OneFrame will not hang later
+		for(auto e : m_FrameFenceEvents)
+			SetEvent(e);
 		m_SwapChainBuffers.clear();
 		m_RhiSwapChainBuffers.clear();
 		return true;
@@ -101,12 +135,35 @@ namespace device
 
 	TextureHandle SwapChain::GetCurrentBackendBuffer()
 	{
-		return TextureHandle();
+		return m_RhiSwapChainBuffers[m_SwapChain->GetCurrentBackBufferIndex()];
 	}
 
 	bool SwapChain::Resize()
 	{
+		ReleaseSwapChainBuffer();
+		if (!m_Device)
+			return false;
+
+		if (!m_SwapChain)
+			return false;
+
+		const HRESULT hr = m_SwapChain->ResizeBuffers(desc.swapChainBufferCount,
+                                            desc.width,
+                                            desc.height,
+                                            m_SwapChainDesc.Format,
+                                            m_SwapChainDesc.Flags);
+
+		bool ret = CreateSwapChainBuffer();
+		if(!ret)
+		{
+			LOGD("CreateSwapChainBuffer failed");
+			return false;
+		}
+		return true;
 	}
 
+	void SwapChain::Present()
+	{
+	}
 }
 }
