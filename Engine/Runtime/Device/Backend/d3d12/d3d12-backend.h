@@ -960,23 +960,22 @@ namespace device {
         std::shared_ptr<InternalCommandList> createInternalCommandList() const;
     };
 
-	class SwapChain : public RefCounter<ISwapChain>
+	class SwapChain : public RefCounter<DXSwapChain>
 	{
 	public:
-		explicit SwapChain(const SwapChainDesc& desc, class Device* device, HWND hwnd, RefCountPtr<ID3D12CommandQueue> queue);
+		explicit SwapChain(const SwapChainDesc& desc, class Device* device);
 		~SwapChain() override;
+		TextureHandle GetCurrentBackendBuffer() override;
+		const SwapChainDesc& getDesc() const override { return desc; }
+		bool Resize() override;
+		void Present() override;
 
 		bool CreateSwapChainBuffer();
 		bool ReleaseSwapChainBuffer();
-		TextureHandle GetCurrentBackendBuffer() override;
 
-		const SwapChainDesc& getDesc() const override { return desc; }
-		virtual bool Resize() override;
-		virtual void Present() override;
+		HANDLE GetCurrentFrameFenceEvent() override;
     
-		RefCountPtr<ID3D12Fence>                    m_FrameFence;
 		std::vector<HANDLE>                         m_FrameFenceEvents;
-		UINT64                                      m_FrameCount = 1;
 
 		SwapChainDesc desc;
 		RefCountPtr<IDXGISwapChain3>                m_SwapChain;
@@ -1003,7 +1002,6 @@ namespace device {
         // IDevice implementation
 
         HeapHandle createHeap(const HeapDesc& d) override;
-		SwapChainHandle createSwapChain(const SwapChainDesc& desc) override;
         TextureHandle createTexture(const TextureDesc& d) override;
         MemoryRequirements getTextureMemoryRequirements(ITexture* texture) override;
         bool bindTextureMemory(ITexture* texture, IHeap* heap, uint64_t offset) override;
@@ -1085,6 +1083,8 @@ namespace device {
         
         // Internal interface
         Queue* getQueue(CommandQueue type) { return m_Queues[int(type)].get(); }
+
+		void* getNativeWindow() { return m_Context.nativeWindow; };
 
     private:
         Context m_Context;

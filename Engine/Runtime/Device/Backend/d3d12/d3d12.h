@@ -88,6 +88,14 @@ namespace device {
 
     typedef RefCountPtr<DXDevice> DXDeviceHandle;
 
+	class DXSwapChain : public ISwapChain
+	{
+	public:
+		virtual HANDLE GetCurrentFrameFenceEvent() = 0;
+	};
+
+	typedef RefCountPtr<DXSwapChain> DXSwapChainHandle;
+
     struct DeviceDesc
     {
         IMessageCallback* errorCB = nullptr;

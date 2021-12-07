@@ -2384,7 +2384,6 @@ namespace device
     {
     public:
         virtual HeapHandle createHeap(const HeapDesc& d) = 0;
-		virtual SwapChainHandle createSwapChain(const SwapChainDesc& d) = 0;
         virtual TextureHandle createTexture(const TextureDesc& d) = 0;
         virtual MemoryRequirements getTextureMemoryRequirements(ITexture* texture) = 0;
         virtual bool bindTextureMemory(ITexture* texture, IHeap* heap, uint64_t offset) = 0;

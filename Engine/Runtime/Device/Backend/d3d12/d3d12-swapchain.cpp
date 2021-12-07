@@ -4,10 +4,12 @@ namespace redtea
 {
 namespace device
 {
-	SwapChain::SwapChain(const SwapChainDesc& d, class Device* device, HWND hWnd, RefCountPtr<ID3D12CommandQueue> queue)
+	SwapChain::SwapChain(const SwapChainDesc& d, class Device* device)
 	{
 		m_Device = device;
-		
+		HWND hWnd = (HWND)device->getNativeWindow();
+		auto queue = device->getQueue(CommandQueue::Graphics);
+
 		desc = d;
 		m_FullScreenDesc = {};
 		m_FullScreenDesc.RefreshRate.Numerator = desc.refreshRate;
@@ -48,7 +50,7 @@ namespace device
 		HRESULT hr = CreateDXGIFactory2(0, IID_PPV_ARGS(&pDxgiFactory));
 
 		RefCountPtr<IDXGISwapChain1> pSwapChain1;
-		hr = pDxgiFactory->CreateSwapChainForHwnd(queue, hWnd, &m_SwapChainDesc, &m_FullScreenDesc, nullptr, &pSwapChain1);
+		hr = pDxgiFactory->CreateSwapChainForHwnd(queue->queue, hWnd, &m_SwapChainDesc, &m_FullScreenDesc, nullptr, &pSwapChain1);
 		
 		if (FAILED(hr))
 		{
@@ -62,9 +64,6 @@ namespace device
 			LOGD("QueryInterface for swapchain failed");
 			return;
 		}
-
-		ID3D12Device* rawDevice = m_Device->getRawDevice();
-		hr = rawDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_FrameFence));
 
 		if (FAILED(hr))
 		{
@@ -152,6 +151,7 @@ namespace device
                                             desc.height,
                                             m_SwapChainDesc.Format,
                                             m_SwapChainDesc.Flags);
+		LOGIfFailed(hr, "SwapChain resize buffer failed");
 
 		bool ret = CreateSwapChainBuffer();
 		if(!ret)
@@ -164,6 +164,16 @@ namespace device
 
 	void SwapChain::Present()
 	{
+		UINT presentFlags = 0;
+		if (!desc.vsyncEnabled && m_FullScreenDesc.Windowed && desc.allowTearing)
+			presentFlags |= DXGI_PRESENT_ALLOW_TEARING;
+		m_SwapChain->Present(desc.vsyncEnabled ? 1 : 0, presentFlags);
+	}
+
+	HANDLE SwapChain::GetCurrentFrameFenceEvent()
+	{
+		auto bufferIndex = m_SwapChain->GetCurrentBackBufferIndex();
+		return m_FrameFenceEvents[bufferIndex];
 	}
 }
 }

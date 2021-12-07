@@ -17,6 +17,7 @@ TEST(DX12_TEST, dx_device)
 
 	auto device = driver->CreateDevice(param);
 	auto swapchain = driver->CreateSwapChain();
-
+	driver->BeginFrame();
+	swapchain->Present();
 	app.Run();
 }

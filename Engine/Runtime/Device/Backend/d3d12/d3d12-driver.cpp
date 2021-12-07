@@ -1,4 +1,5 @@
 #include "./d3d12-driver.h"
+#include "d3d12-backend.h"
 #include <common.h>
 
 namespace redtea {
@@ -102,6 +103,8 @@ namespace device {
 			m_CopyQueue->SetName(L"Copy Queue");
 		}
 
+		hr = m_Device12->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_FrameFence));
+		LOGIfFailed(hr, "Create Frame Fence failed");
 		return true;
 	}
 
@@ -134,7 +137,10 @@ namespace device {
 			.setSwapChainFormat(Format::SRGBA8_UNORM)
 			.setAllowModeSwitch(true)
 			.setAllowTearing(m_TearingSupported);
-		m_SwapChain = m_Device->createSwapChain(desc);
+		Device* device = (Device* ) m_Device.Get();
+		
+		SwapChain* swapChain = new SwapChain(desc, device);
+		m_SwapChain = DXSwapChainHandle::Create(swapChain);
 		return m_SwapChain;
 	}
 
@@ -145,6 +151,19 @@ namespace device {
 
 	void DXDriver::BeginFrame()
 	{
+		// Wait for gpu
+		auto event = m_SwapChain->GetCurrentFrameFenceEvent();
+		WaitForSingleObject(event, INFINITY);
+	}
+
+	void DXDriver::Present()
+	{
+		auto event = m_SwapChain->GetCurrentFrameFenceEvent();
+		m_SwapChain->Present();
+
+		m_FrameFence->SetEventOnCompletion(m_FrameCount, event);
+		m_GraphicsQueue->Signal(m_FrameFence, m_FrameCount);
+		m_FrameCount++;
 	}
 }
 }

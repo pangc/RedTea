@@ -437,12 +437,5 @@ namespace device
         return HeapHandle::Create(heap);
     }
 
-	SwapChainHandle Device::createSwapChain(const SwapChainDesc& desc)
-	{
-		auto queue = getQueue(CommandQueue::Graphics);
-		SwapChain* swapChain = new SwapChain(desc, this, m_Context.nativeWindow, queue->queue);
-		return SwapChainHandle::Create(swapChain);
-	}
-
 }
 }

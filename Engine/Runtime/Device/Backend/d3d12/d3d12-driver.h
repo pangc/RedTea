@@ -17,6 +17,7 @@ namespace device {
 	{
 	public:
 		virtual void BeginFrame() = 0;
+		virtual void Present() = 0;
 		virtual DeviceHandle CreateDevice(DeviceCreationParameters param) = 0;
 		virtual SwapChainHandle CreateSwapChain() = 0;
 	};
@@ -37,10 +38,13 @@ namespace device {
 	
 		UINT										m_Width;
 		UINT										m_Height;
-		
+
+		RefCountPtr<ID3D12Fence>                    m_FrameFence;
+		UINT64                                      m_FrameCount = 1;
+
 		// RHI
 		DeviceHandle								m_Device = nullptr;
-		SwapChainHandle								m_SwapChain = nullptr;
+		DXSwapChainHandle							m_SwapChain = nullptr;
 	public:
 		static RefCountPtr<IDXGIAdapter> GetAdaptor();
 
@@ -48,6 +52,7 @@ namespace device {
 		SwapChainHandle CreateSwapChain() override;
 		TextureHandle CreateTexture();
 		void BeginFrame() override;
+		void Present() override;
 	};
 }
 }
