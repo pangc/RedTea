@@ -12,7 +12,7 @@ namespace device
 		m_FullScreenDesc.RefreshRate.Denominator = 1;
 		m_FullScreenDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_PROGRESSIVE;
 		m_FullScreenDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-		m_FullScreenDesc.Windowed = false;
+		m_FullScreenDesc.Windowed = true;
 
 		ZeroMemory(&m_SwapChainDesc, sizeof(m_SwapChainDesc));
 		m_SwapChainDesc.Width = desc.width;
@@ -98,5 +98,15 @@ namespace device
 		m_RhiSwapChainBuffers.clear();
 		return true;
 	}
+
+	TextureHandle SwapChain::GetCurrentBackendBuffer()
+	{
+		return TextureHandle();
+	}
+
+	bool SwapChain::Resize()
+	{
+	}
+
 }
 }

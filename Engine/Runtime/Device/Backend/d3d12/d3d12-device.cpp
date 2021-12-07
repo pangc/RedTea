@@ -439,6 +439,5 @@ namespace device
 		return SwapChainHandle::Create(swapChain);
 	}
 
-
 }
 }

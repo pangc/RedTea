@@ -41,9 +41,14 @@ namespace device {
 		return targetAdapter;
 	}
 
-	bool DXDriver::InitContext(void * window, DeviceCreationParameters param)
+	bool DXDriver::InitContext(DeviceCreationParameters param)
 	{
-		m_hWnd = (HWND)window;
+		if (!param.nativeWindow)
+		{
+			LOGD("Init Context failed,  nativeWindows is nullptr");
+			return false;
+		}
+		m_hWnd = (HWND)param.nativeWindow;
 		RECT clientRect;
 		GetClientRect(m_hWnd, &clientRect);
 		m_Width = clientRect.right - clientRect.left;
@@ -101,10 +106,42 @@ namespace device {
 		return true;
 	}
 
-	DeviceHandle DXDriver::CreateDevice()
+	DeviceHandle DXDriver::CreateDevice(DeviceCreationParameters param)
 	{
-		
-		return DeviceHandle();
+		bool succ = InitContext(param);
+		if (!succ)
+		{
+			return DeviceHandle();
+		}
+		DeviceDesc deviceDesc;
+		deviceDesc.pDevice = m_Device12;
+		deviceDesc.pGraphicsCommandQueue = m_GraphicsQueue;
+		deviceDesc.pComputeCommandQueue = m_ComputeQueue;
+		deviceDesc.pCopyCommandQueue = m_CopyQueue;
+		deviceDesc.nativeWindow = (HWND)param.nativeWindow;
+
+		m_Device = createDevice(deviceDesc);
+		return m_Device;
+	}
+
+	SwapChainHandle DXDriver::CreateSwapChain()
+	{
+		SwapChainDesc desc;
+		desc.setWidth(m_Width)
+			.setHeight(m_Height)
+			.setSwapChainBufferCount(3)
+			.setSwapChainSampleCount(1)
+			.setSwapChainSampleQuality(0)
+			.setSwapChainFormat(Format::SRGBA8_UNORM)
+			.setAllowModeSwitch(true)
+			.setAllowTearing(m_TearingSupported);
+		m_SwapChain = m_Device->createSwapChain(desc);
+		//m_SwapChain->CreateSwapChainBuffer(m_Device);
+		return m_SwapChain;
+	}
+
+	void DXDriver::BeginFrame()
+	{
 	}
 }
 }

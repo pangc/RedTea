@@ -11,9 +11,12 @@ TEST(DX12_TEST, dx_device)
 	auto nativeWindow = app.GetWindow()->GetNativeWindow();
 	auto driver = new redtea::device::DXDriver();
 	device::DeviceCreationParameters param;
+	param.nativeWindow = nativeWindow;
 	param.enableComputeQueue = false;
 	param.enableCopyQueue = false;
 
-	driver->InitContext(nativeWindow, param);
+	auto device = driver->CreateDevice(param);
+	auto swapchain = driver->CreateSwapChain();
+
 	app.Run();
 }

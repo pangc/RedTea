@@ -970,6 +970,7 @@ namespace device {
 		bool ReleaseSwapChainBuffer();
 
 		const SwapChainDesc& getDesc() const override { return desc; }
+		virtual bool Resize() const override;
 
 		SwapChainDesc desc;
 		RefCountPtr<IDXGISwapChain3>                m_SwapChain;
